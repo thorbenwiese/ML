@@ -1,4 +1,7 @@
 import numpy as np
+import matplotlib.pyplot as plt 
+import matplotlib.cm as cm
+from sklearn.model_selection import train_test_split
 
 def generateHilbertMatrix(k):
   m = np.zeros((k,k))
@@ -48,32 +51,75 @@ def findMinMaxMean(data):
   print "Mean: " + str(mean)
 
 def main():
-# Assignment 02.2
+  # Assignment 02.2
+  # a) b)
   for i in range(1,30 + 1):
     print "k = " + str(i)
     hilbertMatrix = generateHilbertMatrix(i)
     calculateRankAndConditionNumbers(hilbertMatrix)
 
+  # c)
   for j in [1,2,3,5,10,15,20,30,50,100]:
     print "x_k for k = " + str(j) + ":"
     solveEquations(generateHilbertMatrix(j), np.ones(j))
 
-# The check result should return only 0s, but since the matrix gets more
-# inaccurate the bigger it gets due to the floating point calculation
-# 1/x the results are already wrong for k = 3
+  # d) Only to some extend (see subtask e)
+
+  # e)
+  # The check result should return only 0s, but since the matrix gets more
+  # inaccurate the bigger it gets due to the floating point calculation
+  # 1/x the results are already (a little bit) wrong for k = 3
 
 
-# Assignment 02.3
+  # Assignment 02.3
+  # a)
   data = readFileData()
-  print data[:,0]
-  print len(data)
-  for i in range(0, 9):
-    print "i: " + str(i)
-  for i in range(0, 9):
-    findMinMaxMean(data[:,i].reshape(len(data),1))
+  data = data[:, ~np.isnan(data).any(axis=0)]
 
+  # numCols is -1 because the last column ocean_proximity is only strings
+  numCols = data.shape[1] - 1
+  numRows = data.shape[0]
 
+  # b)
+  for i in range(0, numCols):
+    findMinMaxMean(data[:,i].reshape(numRows,1))
 
+  # c)
+  # I would say they all have a normal distribution, but not the same ones
+  columnNames = ["longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms", "population", "households", "median_income", "median_house_value", "ocean_proximity"]
 
+  for i in range(0,numCols):
+    plt.figure()
+    plt.title("Histogram for data column " + columnNames[i])
+    plt.hist(data[:,i])
+
+  # d)
+  plt.figure()
+  plt.title("Geographical map of houses")
+  plt.scatter(data[:,0], data[:,1], s=2, alpha=0.1, c=data[:,0], cmap=cm.bwr)
+
+  # e)
+  labels = range(0,numRows)
+  values = data[:,:-1]
+
+  X_train, X_test, y_train, y_test = train_test_split(values, labels, test_size=0.20, random_state=42)
+
+  findMinMaxMean(X_train)
+  findMinMaxMean(X_test)
+
+  plt.figure()
+  plt.title("Train set histogram")
+  plt.hist(X_train)
+
+  plt.figure()
+  plt.title("Test set histogram")
+  plt.hist(X_test)
+  
+  # --> the test and training set distribution match
+
+  # plots all figures
+  plt.show()
+
+# execute main
 if __name__ == "__main__":
   main()
