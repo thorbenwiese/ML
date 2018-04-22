@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+
+import math
+import scipy.stats as stats
 import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.cm as cm
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import GradientBoostingRegressor
 
 def generateHilbertMatrix(k):
   m = np.zeros((k,k))
@@ -38,17 +44,35 @@ def readFileData():
   return np.genfromtxt("housing.csv", delimiter=',')[1:]
 
 def findMinMaxMean(data):
-  minVal = np.nanmin(data, axis=0)[0]
-  minIdx = np.where(data.ravel()==minVal)
-  maxVal = np.nanmax(data, axis=0)[0]
-  maxIdx = np.where(data.ravel()==maxVal)
-  mean = np.nanmean(data, axis=0)[0]
+  if len(data.shape) == 1:
+    d = data.reshape(data.shape[0],1)
+  else:
+    d = data
+  minVal = np.nanmin(d, axis=0)[0]
+  minIdx = np.where(d.ravel()==minVal)
+  maxVal = np.nanmax(d, axis=0)[0]
+  maxIdx = np.where(d.ravel()==maxVal)
+  mean = np.nanmean(d, axis=0)[0]
 
   print "Min: " + str(minVal)
   print "Min Indices: " + str(minIdx)
   print "Max: " + str(maxVal)
   print "Max Indices: " + str(maxIdx)
   print "Mean: " + str(mean)
+
+  return(minVal, maxVal, mean)
+
+def euclideanDist(set1, set2):
+  dist = 0
+  for i in range(0,len(set1)):
+    dist += pow((set1[i] - set2[i]), 2)
+  return math.sqrt(dist)
+
+def euclideanDistForTwoPoints(point1, point2):
+  return math.sqrt(pow((point1 - point2), 2))
+
+def calculateLoss(set1, set2):
+  return mean_squared_error(set1, set2)
 
 def main():
   # Assignment 02.2
@@ -63,14 +87,6 @@ def main():
     print "x_k for k = " + str(j) + ":"
     solveEquations(generateHilbertMatrix(j), np.ones(j))
 
-  # d) Only to some extend (see subtask e)
-
-  # e)
-  # The check result should return only 0s, but since the matrix gets more
-  # inaccurate the bigger it gets due to the floating point calculation
-  # 1/x the results are already (a little bit) wrong for k = 3
-
-
   # Assignment 02.3
   # a)
   data = readFileData()
@@ -82,43 +98,74 @@ def main():
 
   # b)
   for i in range(0, numCols):
-    findMinMaxMean(data[:,i].reshape(numRows,1))
+    findMinMaxMean(data[:,i])
 
   # c)
-  # I would say they all have a normal distribution, but not the same ones
   columnNames = ["longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms", "population", "households", "median_income", "median_house_value", "ocean_proximity"]
 
   for i in range(0,numCols):
+    minVal, maxVal, mean = findMinMaxMean(data[:,i])
+    print 'MINMAXMEAN: ' + str(minVal) + ' ' + str(maxVal) + ' ' + str(mean)
     plt.figure()
     plt.title("Histogram for data column " + columnNames[i])
     plt.hist(data[:,i])
+    plt.plot([],[],' ',label='Min: ' + str(minVal))
+    plt.plot([],[],' ',label='Max: ' + str(maxVal))
+    plt.plot([],[],' ',label='Mean: ' + str(mean))
+    plt.legend()
 
   # d)
   plt.figure()
   plt.title("Geographical map of houses")
-  plt.scatter(data[:,0], data[:,1], s=2, alpha=0.1, c=data[:,0], cmap=cm.bwr)
+  plt.scatter(data[:,0], data[:,1], s=2, alpha=0.1, c=data[:,7], cmap=cm.bwr)
 
   # e)
   labels = range(0,numRows)
-  values = data[:,:-1]
+  values = data
 
   X_train, X_test, y_train, y_test = train_test_split(values, labels, test_size=0.20, random_state=42)
 
   findMinMaxMean(X_train)
   findMinMaxMean(X_test)
 
-  plt.figure()
-  plt.title("Train set histogram")
-  plt.hist(X_train)
-
-  plt.figure()
-  plt.title("Test set histogram")
-  plt.hist(X_test)
+  for i in range(0,numCols):
+    plt.figure()
+    plt.title("Histogram for train and test data column " + columnNames[i])
+    plt.hist(X_train[:,i], label='train data')
+    plt.hist(X_test[:,i], label='test data')
+    plt.legend(loc='upper right')
   
-  # --> the test and training set distribution match
-
   # plots all figures
   plt.show()
+
+
+  # Assignment 02.4
+  # a)
+  np.random.seed(9876)
+  mod = GradientBoostingRegressor(loss='ls')
+  fit = mod.fit(X_train, y_train)
+  predict = fit.predict(X_test)
+  #print predict
+  #print y_test
+  loss = calculateLoss(predict, y_test)
+  # TODO loss ist viel zu hoch?!
+  print loss
+
+  # b)
+  distance = euclideanDist(data[:,0], data[:,1])
+  # TODO distance ist viel zu gross?!
+  # vielleicht sollte für kNN die Funktion euclideanDistForTwoPoints()
+  # verwendet werden..
+  print 'Distance: ' + repr(distance)
+
+  # c)
+  # implement kNN
+  # siehe https://machinelearningmastery.com/tutorial-to-implement-k-nearest-neighbors-in-python-from-scratch/
+
+
+  # d)
+  # predict housing values for different values of k
+  # what are training and test errors?
 
 # execute main
 if __name__ == "__main__":
