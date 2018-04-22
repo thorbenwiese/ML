@@ -1,0 +1,29 @@
+ML Assingment 02 - Answers
+
+Assignment 02.2
+d)
+Only to some extend. We can expect that the matrix gets more and more 
+inaccurate, the bigger it gets. If we work with smaller matrices, we could 
+probably ignore the error, but if the matrix has a large size, than we 
+should improve our floating point calculation to avoid the inaccuracy.
+
+e)
+The check result should return only 0s, but since the matrix gets more
+inaccurate the bigger it gets due to the floating point calculation
+1/x the results are already (a little bit) wrong for k = 3. Therefore the 
+matrix is 'special', because it gets more inaccurate, the bigger it gets.
+
+
+Assignment 02.3
+
+c)
+None of the plotted data has a 'clean' normal distribution. The data for 
+latitude and longitude does not have a normal distribution, since 
+the data is not symmetric around the mean value and the other histograms show 
+that even if the data was symmetric around the mean value, the whole data would 
+not be under the area of the curve. Therefore none of the histograms has a 
+normal distribution.
+
+e)
+The test and training set distribution match. The results can be seen in the 
+plotted histograms that compare both distributions.
