@@ -8,6 +8,7 @@ import matplotlib.cm as cm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.ensemble import GradientBoostingRegressor
+from idlelib.rpc import response_queue
 
 def generateHilbertMatrix(k):
   m = np.zeros((k,k))
@@ -17,15 +18,15 @@ def generateHilbertMatrix(k):
   return m
 
 def calculateRankAndConditionNumbers(matrix):
-  print "Rank: " + str(np.linalg.matrix_rank(matrix))
-  print "Condition number: " + str(np.linalg.cond(matrix))
-  print ""
+    print ("Rank "+ str(np.linalg.matrix_rank(matrix)))
+    print ("Condition number: " + str(np.linalg.cond(matrix)))
+    print ("")
 
 def solveEquations(matrix, b):
   x = np.linalg.solve(matrix ,b)
-  print x
-  print "Check result: " + str(np.linalg.norm(np.dot(matrix, x) - b))
-  print ""
+  print (x)
+  print ("Check result: " + str(np.linalg.norm(np.dot(matrix, x) - b)))
+  print ("")
 
 
 def readFileData():
@@ -54,18 +55,21 @@ def findMinMaxMean(data):
   maxIdx = np.where(d.ravel()==maxVal)
   mean = np.nanmean(d, axis=0)[0]
 
-  print "Min: " + str(minVal)
-  print "Min Indices: " + str(minIdx)
-  print "Max: " + str(maxVal)
-  print "Max Indices: " + str(maxIdx)
-  print "Mean: " + str(mean)
+  print ("Min: " + str(minVal))
+  print ("Min Indices: " + str(minIdx))
+  print ("Max: " + str(maxVal))
+  print ("Max Indices: " + str(maxIdx))
+  print ("Mean: " + str(mean))
 
   return(minVal, maxVal, mean)
 
 def euclideanDist(set1, set2):
   dist = 0
   for i in range(0,len(set1)):
-    dist += pow((set1[i] - set2[i]), 2)
+    try:
+        dist += pow((set1[i] - set2[i]), 2)
+    except:
+        pass
   return math.sqrt(dist)
 
 def euclideanDistForTwoPoints(point1, point2):
@@ -73,18 +77,44 @@ def euclideanDistForTwoPoints(point1, point2):
 
 def calculateLoss(set1, set2):
   return mean_squared_error(set1, set2)
+  
+def neighbors(set, instance, k):
+    dist = []
+    for x in range(len(set)):
+        dist.append([set[x], euclideanDist(instance, set[x])])
+    dist.sort(key=lambda x: x[1])
+    return dist[1:k] # 1 da 0 die instance selbst ist
+
+def response(n):
+    result_mean = 0
+    for i in range(len(n)):
+        result_mean += n[i][0][-1]
+    return result_mean / len(n)
+          
+
+def knn(k, test_set):
+    #test_set = test_set[0:1000]
+    predictions = []
+    for i in range(len(test_set)):
+        n = neighbors(test_set, test_set[i], k)
+        p = response(n)
+        predictions.append(p) 
+        #print('prediction {0:f},\t actual: {1:f}'.format(p, test_set[i][-1]))
+    t = [test_set[i][-1] for i in range(len(test_set))]
+    error = calculateLoss(predictions, t)
+    print('error for k={0:d} is {1:f}'.format(k, error))
 
 def main():
   # Assignment 02.2
   # a) b)
   for i in range(1,30 + 1):
-    print "k = " + str(i)
+    print ("k = " + str(i))
     hilbertMatrix = generateHilbertMatrix(i)
     calculateRankAndConditionNumbers(hilbertMatrix)
 
   # c)
   for j in [1,2,3,5,10,15,20,30,50,100]:
-    print "x_k for k = " + str(j) + ":"
+    print ("x_k for k = " + str(j) + ":")
     solveEquations(generateHilbertMatrix(j), np.ones(j))
 
   # Assignment 02.3
@@ -105,7 +135,7 @@ def main():
 
   for i in range(0,numCols):
     minVal, maxVal, mean = findMinMaxMean(data[:,i])
-    print 'MINMAXMEAN: ' + str(minVal) + ' ' + str(maxVal) + ' ' + str(mean)
+    print ('MINMAXMEAN: ' + str(minVal) + ' ' + str(maxVal) + ' ' + str(mean))
     plt.figure()
     plt.title("Histogram for data column " + columnNames[i])
     plt.hist(data[:,i])
@@ -117,7 +147,7 @@ def main():
   # d)
   plt.figure()
   plt.title("Geographical map of houses")
-  plt.scatter(data[:,0], data[:,1], s=2, alpha=0.1, c=data[:,7], cmap=cm.bwr)
+  plt.scatter(data[:,0], data[:,1], s=2, alpha=0.1, c=data[:,7], cmap=cm.get_cmap('RdBu_r'))
 
   # e)
   labels = range(0,numRows)
@@ -135,8 +165,7 @@ def main():
     plt.hist(X_test[:,i], label='test data')
     plt.legend(loc='upper right')
   
-  # plots all figures
-  plt.show()
+
 
 
   # Assignment 02.4
@@ -149,14 +178,24 @@ def main():
   #print y_test
   loss = calculateLoss(predict, y_test)
   # TODO loss ist viel zu hoch?!
-  print loss
+  print(loss)
 
   # b)
   distance = euclideanDist(data[:,0], data[:,1])
   # TODO distance ist viel zu gross?!
   # vielleicht sollte für kNN die Funktion euclideanDistForTwoPoints()
   # verwendet werden..
-  print 'Distance: ' + repr(distance)
+  print ('Distance: ' + repr(distance))
+  
+
+  err = []
+  for k in range(2,20):
+    err.append(knn(k, X_train))
+  plt.plot(err)
+  
+  
+    # plots all figures
+  plt.show()
 
   # c)
   # implement kNN
