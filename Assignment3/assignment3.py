@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -64,13 +66,31 @@ def individual(i, input_set, args):
         #b.sort() # TODO richtig?
         a = a + b
     return a, input_set[i]
-        
+   
+'''
+e. Generate random numbers with a uniform distribution in a circle of radius r.
+(Recent versions of numpy actually have a function for this, but the goal here 
+is to understand the issue first and then to come up with your own solution.)
+'''     
+def randomCircle(radius):
+  x = []
+  y = []
+  for i in range(0,1000):
+      angle = np.random.uniform(0,1) * 2 * np.pi
+      x.append(np.cos(angle)*radius)
+      y.append(np.sin(angle)*radius)
+  fig = plt.figure()
+  plt.scatter(x,y)
+  plt.axes().set_aspect('equal', 'datalim')
+  plt.title('Circle of random numbers with radius ' + str(radius))
+  fig.canvas.set_window_title('circle')
 
 def main():
-    plot(uniform, ([100, 1000, 10000, 100000]))
-    plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
-    plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
-    plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
+    #plot(uniform, ([100, 1000, 10000, 100000]))
+    #plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
+    #plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
+    #plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
+    randomCircle(5)
     plt.show()
 
 if __name__ == "__main__":
