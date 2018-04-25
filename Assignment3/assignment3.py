@@ -72,7 +72,7 @@ e. Generate random numbers with a uniform distribution in a circle of radius r.
 (Recent versions of numpy actually have a function for this, but the goal here 
 is to understand the issue first and then to come up with your own solution.)
 '''     
-def randomCircle(radius):
+def plotRandomCircle(radius):
   x = []
   y = []
   for i in range(0,1000):
@@ -86,11 +86,11 @@ def randomCircle(radius):
   fig.canvas.set_window_title('circle')
 
 def main():
-    #plot(uniform, ([100, 1000, 10000, 100000]))
-    #plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
-    #plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
-    #plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
-    randomCircle(5)
+    plot(uniform, ([100, 1000, 10000, 100000]))
+    plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
+    plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
+    plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
+    plotRandomCircle(5)
     plt.show()
 
 if __name__ == "__main__":
