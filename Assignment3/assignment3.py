@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import scipy.io as sio
 '''
+Assignment 1
+Generated datasets based on known distributions are often the best way to test and understand
+new algorithms. Numpy offers a wide range of functions to generate and work with random
+numbers.
+
 1a. Read the documentation for the numpy.random functions.
 Create arrays of n ∈ [100, 1000, 10000, 100 000] random numbers with uniform distribution.
 Plot the raw data, then generate and plot histograms with 10 bins. How do the mean,
@@ -14,7 +19,7 @@ def uniform(k):
     return np.random.uniform(low=0.0, high=1.0, size=k)
 
 def plot(func, input_set, *args):
-    fig = plt.figure(figsize=(20, 20))
+    fig = plt.figure(figsize=(10, 10))
     fig.canvas.set_window_title(func.__name__)
     outer = gridspec.GridSpec(len(input_set)//2+1, 2, wspace=0.2, hspace=0.2)
     
@@ -115,6 +120,9 @@ def plotRandomCircle2(radius):
 #TODO auf Radius oder innerhalb Radius -> auf Kreisaußengrenzen oder innerhalb des Kreis
 
 '''
+Assignment 2
+Load the data from Adot.mat. Each column of matrix X represents on data point.
+
 2a. Use the function scipy.io.loadmat to parse and load the Matlab/Octave.mat 
 data file, then access the array(s) inside the data structures.
 '''
@@ -185,19 +193,120 @@ def createLinearMapping(X):
   plt.title('X with linear mapping A')
   plt.plot(X,A)
   # TODO what does A do?
+  
+'''
+3.
+In this exercise, we use a kNN classifier to classify handwritten digits from the USPS data-set. You
+can reuse your kNN classifier from Assignment 2 or use libraries from Scikit. The USPS data-set
+contains grayscale handwritten digit images scanned from envelopes by the U.S. Postal Service.
+The images are of size 16 × 16 (256 pixel) with pixel values in the range 0 to 255. We have 10
+classes {1, 2, ..., 9, 0}. The training data has 10000 images, stored in a 10000 × 256 Matlab matrix
+(usps train.mat). The training label is a 10000 × 1 vector revealing the labels for the training data.
+There are 1000 test images for evaluating your algorithm in the test data (usps test.mat).
+'''
+    
+'''
+a. First, we want to classify digit 2 versus digit 3. Prepare the training data: Load the train
+data (scipy.io.loadmat) and prepare the training set for classes 2 and 3. We need to convert
+the data type from uint8 (8-bit unsigned integer) to double. Do the same for the test data.
+'''
+def loadData():
+    train  = sio.loadmat('usps/usps_train.mat')
+    test  = sio.loadmat('usps/usps_test.mat')
+    test_data = test['test_data'].astype(float)
+    test_label = test['test_label'].astype(float)
+    train_data = train['train_data'].astype(float)
+    train_label = train['train_label'].astype(float)
+#     array = test['test_label'].astype(float)
+    print(test)
+#     print(train, test)
+    return test_data, test_label, train_data, train_label
+
+'''
+b. Plot a few example images using matplotlib.pyplot.imshow and the grayscale colormap
+(cmap=’grey’ ). Use reshape to convert the image vectors into 16 × 16 images.
+'''
+def get_image(data, label, index):
+    return data[index].reshape(16,16), label[index]
+
+def show_single_image(data, label, index):
+    img, l = get_image(data, label, index)
+    print(img)
+    plt.title('Interpretation: '+str(l))
+    plt.imshow(img, cmap='Greys')
+    plt.show()
+
+# def plot_images(images, labels):
+#     fig, axes = plt.subplots(nrows=4, ncols=4)
+#     fig.tight_layout() # Or equivalently,  "plt.tight_layout()"
+#     fig.canvas.set_window_title('Images')
+#     
+#     for i in range(len(images)):
+#         ax = plt.subplot(fig)
+#         ax.set_title('n = {0:f}'.format(labels[i][0]))
+#         ax.imshow(images[i], cmap='Greys')
+#         fig.add_subplot(ax)
+#     plt.show()
+    
+def plot_images(images, labels):
+    fig = plt.figure(figsize=(10, 10))
+    fig.canvas.set_window_title('Images')
+    outer = gridspec.GridSpec(len(images)//2+1, 2)
+    outer.update(hspace=0.5)
+     
+    for i in range(len(images)):
+        inner = gridspec.GridSpecFromSubplotSpec(1, 1,
+                        subplot_spec=outer[i], wspace=0, hspace=0)
+ 
+        ax = plt.Subplot(fig, inner[0])
+        ax.set_title('n = {0:d}'.format(int(labels[i][0])))
+        ax.imshow(images[i], cmap='Greys')
+        fig.add_subplot(ax)
+    plt.show()
+
+def show_random_images(data, label, number, singleplots):
+    assert len(data) > number > 0
+    selection = np.random.choice(range(len(data)), number, replace=False)
+    if(singleplots):
+        for x in selection:
+            show_single_image(data, label, x)
+    else:
+        images = []
+        labels = []
+        for x in selection:
+            img, l = get_image(data, label, x)
+            images.append(img)
+            labels.append(l)
+        plot_images(images, labels)
+            
+            
+
+    
+
+'''
+c. Evaluate the performance of your classifier: Test your classifier with different values k =
+1, 3, 5, 7, 10, 15 and plot the training and the test errors.
+d. Now you can classify other digits. Run your algorithm to classify digit 3 from 8 and compare
+its performance with results from digit 2 versus 3.
+'''
+
+
 
 def main():
-    plot(uniform, ([100, 1000, 10000, 100000]))
-    plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
-    plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
-    plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
-    plotRandomCircle(5)
-    plotRandomCircle2(5)
-
-    X = loadMatFile()
-    createLinearMapping(X)
-
-    plt.show()
+#     plot(uniform, ([100, 1000, 10000, 100000]))
+#     plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
+#     plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
+#     plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
+#     plotRandomCircle(5)
+#     plotRandomCircle2(5)
+#  
+#     X = loadMatFile()
+#     createLinearMapping(X)
+#  
+#     plt.show()
+    test_data, test_label, train_data, train_label = loadData()
+    show_random_images(test_data, test_label, 10, False)
+    
 
 if __name__ == "__main__":
   main()
