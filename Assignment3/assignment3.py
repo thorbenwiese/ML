@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import scipy.io as sio
+from sklearn.neighbors import KNeighborsClassifier as knn
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, confusion_matrix
 '''
 Assignment 1
 Generated datasets based on known distributions are often the best way to test and understand
@@ -222,6 +225,27 @@ def loadData():
 #     print(train, test)
     return test_data, test_label, train_data, train_label
 
+def trainTwoThree(train_data, train_label, k,test_data):
+  # irgendwie passen die Dimensionen nicht zueinander.. gucke ich mir morgen
+  # weiter an...
+  #scaler = StandardScaler()  
+  #scaler.fit(train_data)
+  #train_data = scaler.transform(train_data)
+  print train_data[train_data==2]
+  print train_data
+  neigh = knn(n_neighbors=k)
+  neigh.fit(train_data, train_label)
+  test = np.array([[2]]*256).reshape(1,256)
+  print np.shape(test)
+  print np.shape(train_data)
+  print np.shape(test_data)
+  predictTwo = neigh.predict(test)
+  print predictTwo
+  #predictTwo = neigh.predict([[2]])
+  #predictThree = neigh.predict([[3]])
+  #print(predictTwo)
+  #print(predictThree)
+
 '''
 b. Plot a few example images using matplotlib.pyplot.imshow and the grayscale colormap
 (cmap=’grey’ ). Use reshape to convert the image vectors into 16 × 16 images.
@@ -299,13 +323,14 @@ def main():
 #     plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
 #     plotRandomCircle(5)
 #     plotRandomCircle2(5)
-#  
+  
 #     X = loadMatFile()
 #     createLinearMapping(X)
-#  
+  
 #     plt.show()
-    test_data, test_label, train_data, train_label = loadData()
-    show_random_images(test_data, test_label, 10, False)
+     test_data, test_label, train_data, train_label = loadData()
+     trainTwoThree(train_data, train_label,5,test_data)
+     show_random_images(test_data, test_label, 10, False)
     
 
 if __name__ == "__main__":
