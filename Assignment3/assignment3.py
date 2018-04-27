@@ -225,25 +225,48 @@ def loadData():
 #     print(train, test)
     return test_data, test_label, train_data, train_label
 
-def trainModel(num1, num2, train_data, train_label, test_data, k):
-  scaler = StandardScaler()  
-  scaler.fit(train_data)
-  train_data = scaler.transform(train_data)
+def trainModel(num1, num2, train_data, train_label, test_data, test_label, k):
+  # TODO ohne Skalierung sind die scores höher.....
+  #scaler = StandardScaler()  
+  #scaler.fit(train_data)
+  #train_data = scaler.transform(train_data)
+  #scaler.fit(test_data)
+  #test_data = scaler.transform(test_data)
 
-  values = []
-  labels = []
+  # Train Data
+  train_values = []
+  train_labels = []
   for i,x in enumerate(train_label):
     if x == [num1] or x == [num2]:
-      values.append(train_data[i])
-      labels.append(x)
+      train_values.append(train_data[i])
+      train_labels.append(x)
+
+  train_labels = np.ravel(train_labels)
+
+  # Test Data
+  test_values = []
+  test_labels = []
+  for i,x in enumerate(test_label):
+    if x == [num1] or x == [num2]:
+      test_values.append(test_data[i])
+      test_labels.append(x)
+
+  test_labels = np.ravel(test_labels)
 
   knn = classifier(n_neighbors=k)
-  knn.fit(values, np.ravel(labels)) 
+  knn.fit(train_values, train_labels) 
   predict = knn.predict(test_data)
 
   print 'Prediction:\n', predict, '\n'
   print 'Prediction probabilities:\n', knn.predict_proba(test_data)
-  # TODO training vs test error
+
+  train_score = knn.score(train_values, train_labels)
+  test_score = knn.score(test_values, test_labels)
+
+  print 'Train score: ', train_score
+  print 'Test score: ', test_score
+
+  return train_score, test_score
 
 '''
 b. Plot a few example images using matplotlib.pyplot.imshow and the grayscale colormap
@@ -328,9 +351,23 @@ def main():
   
 #     plt.show()
      test_data, test_label, train_data, train_label = loadData()
-     trainModel(2, 3, train_data, train_label, test_data, 5)
+     trainModel(2, 3, train_data, train_label, test_data, test_label, 5)
+     train_scores = []
+     test_scores = []
      for k in [1, 3, 5, 7, 10, 15]:
-       trainModel(2, 3, train_data, train_label, test_data, k)
+       train_score, test_score = trainModel(2, 3, train_data, train_label, test_data, test_label, k)
+       train_scores.append(train_score)
+       test_scores.append(test_score)
+     fig = plt.figure()
+     plt.title('Train vs. Test Score for different k')
+     plt.xlabel('k')
+     plt.ylabel('score in %')
+     x_labels = [1,3,5,7,10,15]
+     plt.xticks([0,1,2,3,4,5], x_labels)
+     plt.plot(train_scores, label='train score')
+     plt.plot(test_scores, label='test score')
+     plt.legend()
+     plt.show()
      show_random_images(test_data, test_label, 10, False)
     
 
