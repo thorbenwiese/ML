@@ -349,17 +349,26 @@ def main():
 #     X = loadMatFile()
 #     createLinearMapping(X)
   
-#     plt.show()
+#     show_random_images(test_data, test_label, 10, False)
+
      test_data, test_label, train_data, train_label = loadData()
      trainModel(2, 3, train_data, train_label, test_data, test_label, 5)
+
      train_scores = []
      test_scores = []
+     train_scores2 = []
+     test_scores2 = []
      for k in [1, 3, 5, 7, 10, 15]:
        train_score, test_score = trainModel(2, 3, train_data, train_label, test_data, test_label, k)
        train_scores.append(train_score)
        test_scores.append(test_score)
+
+       train_score2, test_score2 = trainModel(3, 8, train_data, train_label, test_data, test_label, k)
+       train_scores2.append(train_score2)
+       test_scores2.append(test_score2)
+
      fig = plt.figure()
-     plt.title('Train vs. Test Score for different k')
+     plt.title('Train vs. Test Score (2 and 3) for different k')
      plt.xlabel('k')
      plt.ylabel('score in %')
      x_labels = [1,3,5,7,10,15]
@@ -367,8 +376,18 @@ def main():
      plt.plot(train_scores, label='train score')
      plt.plot(test_scores, label='test score')
      plt.legend()
+
+     fig = plt.figure()
+     plt.title('Train vs. Test Score (3 and 8) for different k')
+     plt.xlabel('k')
+     plt.ylabel('score in %')
+     x_labels = [1,3,5,7,10,15]
+     plt.xticks([0,1,2,3,4,5], x_labels)
+     plt.plot(train_scores2, label='train score')
+     plt.plot(test_scores2, label='test score')
+     plt.legend()
+
      plt.show()
-     show_random_images(test_data, test_label, 10, False)
     
 
 if __name__ == "__main__":
