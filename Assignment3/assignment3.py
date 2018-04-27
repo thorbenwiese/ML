@@ -163,7 +163,7 @@ def createLinearMapping(X):
   plt.title('X and Y with linear mapping V')
   fig.canvas.set_window_title('Linear Mapping of X and Y')
   plt.plot(X,Y)
-  # TODO what does V do?
+  # What does V do? -> it rotates the vectors to the left and right
 
   # c)
   fig = plt.figure()
@@ -187,15 +187,18 @@ def createLinearMapping(X):
   plt.subplot(2,1,2)
   plt.title('X with linear mapping D2')
   plt.plot(X,np.dot(D2,X))
-  # TODO Interpretation: what does D1 and D2 do?
+  # Interpretation: what does D1 and D2 do?
+  # --> D1 doubles the values in the matrix
+  # --> D2 doubles the first half and keeps the second half
 
   # e)
   A = np.dot(np.dot(Vt,D2),V)
   fig = plt.figure()
   fig.canvas.set_window_title('Linear Mapping of X with A')
   plt.title('X with linear mapping A')
-  plt.plot(X,A)
-  # TODO what does A do?
+  plt.plot(X,np.dot(A,X))
+  # What does A do? --> it rotates the first and second half in different
+  # directions
   
 '''
 3.
@@ -339,19 +342,18 @@ its performance with results from digit 2 versus 3.
 
 
 def main():
-#     plot(uniform, ([100, 1000, 10000, 100000]))
-#     plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
-#     plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
-#     plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
-#     plotRandomCircle(5)
-#     plotRandomCircle2(5)
+     plot(uniform, ([100, 1000, 10000, 100000]))
+     plot(gauss, [100, 1000, 10000, 100000], (0, 0.1)) # (0,0.1) -> (mean, variance)
+     plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
+     plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
+     plotRandomCircle(5)
+     plotRandomCircle2(5)
   
-#     X = loadMatFile()
-#     createLinearMapping(X)
+     X = loadMatFile()
+     createLinearMapping(X)
   
-#     show_random_images(test_data, test_label, 10, False)
-
      test_data, test_label, train_data, train_label = loadData()
+     show_random_images(test_data, test_label, 10, False)
      trainModel(2, 3, train_data, train_label, test_data, test_label, 5)
 
      train_scores = []
