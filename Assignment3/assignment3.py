@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import scipy.io as sio
+from sklearn.neighbors import KNeighborsClassifier
+import sklearn.metrics as sme
 '''
 Assignment 1
 Generated datasets based on known distributions are often the best way to test and understand
@@ -217,10 +218,19 @@ def loadData():
     test_label = test['test_label'].astype(float)
     train_data = train['train_data'].astype(float)
     train_label = train['train_label'].astype(float)
-#     array = test['test_label'].astype(float)
     print(test)
-#     print(train, test)
     return test_data, test_label, train_data, train_label
+
+def create_classifier(digits, k):
+    test_data, test_label, train_data, train_label = loadData()
+    indices = [x for x in range(len(test_label)) if test_label[x] in digits]
+    d = test_data[indices[0]:indices[-1]]
+    dl = test_label[indices[0]:indices[-1]].ravel() # ravel für 2D zu 1D
+    print(d)
+    print(dl)
+    classifier = KNeighborsClassifier(n_neighbors=k)
+    classifier.fit(d, dl)
+    return classifier
 
 '''
 b. Plot a few example images using matplotlib.pyplot.imshow and the grayscale colormap
@@ -235,18 +245,6 @@ def show_single_image(data, label, index):
     plt.title('Interpretation: '+str(l))
     plt.imshow(img, cmap='Greys')
     plt.show()
-
-# def plot_images(images, labels):
-#     fig, axes = plt.subplots(nrows=4, ncols=4)
-#     fig.tight_layout() # Or equivalently,  "plt.tight_layout()"
-#     fig.canvas.set_window_title('Images')
-#     
-#     for i in range(len(images)):
-#         ax = plt.subplot(fig)
-#         ax.set_title('n = {0:f}'.format(labels[i][0]))
-#         ax.imshow(images[i], cmap='Greys')
-#         fig.add_subplot(ax)
-#     plt.show()
     
 def plot_images(images, labels):
     fig = plt.figure(figsize=(10, 10))
@@ -265,7 +263,7 @@ def plot_images(images, labels):
     plt.show()
 
 def show_random_images(data, label, number, singleplots):
-    assert len(data) > number > 0
+    assert len(data) >= number > 0
     selection = np.random.choice(range(len(data)), number, replace=False)
     if(singleplots):
         for x in selection:
@@ -278,19 +276,40 @@ def show_random_images(data, label, number, singleplots):
             images.append(img)
             labels.append(l)
         plot_images(images, labels)
-            
-            
-
-    
 
 '''
 c. Evaluate the performance of your classifier: Test your classifier with different values k =
 1, 3, 5, 7, 10, 15 and plot the training and the test errors.
+'''
+def errorrate(classifier, train_data, train_label, test_data, test_label):
+    prediction_train = classifier.predict(train_data)
+    prediction_test = classifier.predict(test_data)
+    train_error = sme.accuracy_score(train_label, prediction_train)
+    test_error = sme.accuracy_score(test_label, prediction_test)
+    return train_error, test_error
+    
+def generate_classifiers(digits, list):
+    return [create_classifier(digits, k) for k in list] 
+
+def test_ks(digits, klist, train_data, train_label, test_data, test_label): 
+    train = []
+    test = []
+    for classifier in generate_classifiers(digits, klist):
+         train_error, test_error = errorrate(classifier, train_data, train_label, test_data, test_label)
+         train.append(train_error)
+         test.append(test_error)
+         print(train_error, test_error)
+    fig = plt.figure()
+    plt.plot(train)
+    plt.plot(test)
+    plt.show()
+        
+        
+'''
 d. Now you can classify other digits. Run your algorithm to classify digit 3 from 8 and compare
 its performance with results from digit 2 versus 3.
 '''
-
-
+    # Aufruf von test_ks(digits, klist, train_data, train_label, test_data, test_label) mit anderen Werten
 
 def main():
 #     plot(uniform, ([100, 1000, 10000, 100000]))
@@ -305,7 +324,11 @@ def main():
 #  
 #     plt.show()
     test_data, test_label, train_data, train_label = loadData()
-    show_random_images(test_data, test_label, 10, False)
+#     show_random_images(test_data, test_label, 10, False)
+#     c23k5 = create_classifier([2,3],5)
+#     errorrate(c23k5, train_data, train_label, test_data, test_label)
+    test_ks([2,3], [1, 3, 5, 7, 10, 15], train_data, train_label, test_data, test_label)
+    test_ks([3,4,5,6,7,8], [1, 3, 5, 7, 10, 15], train_data, train_label, test_data, test_label)
     
 
 if __name__ == "__main__":
