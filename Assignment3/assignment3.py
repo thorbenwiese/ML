@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import scipy.io as sio
-from sklearn.neighbors import KNeighborsClassifier as knn
+from sklearn.neighbors import KNeighborsClassifier as classifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix
 '''
@@ -221,30 +221,29 @@ def loadData():
     train_data = train['train_data'].astype(float)
     train_label = train['train_label'].astype(float)
 #     array = test['test_label'].astype(float)
-    print(test)
+    # print(test)
 #     print(train, test)
     return test_data, test_label, train_data, train_label
 
-def trainTwoThree(train_data, train_label, k,test_data):
-  # irgendwie passen die Dimensionen nicht zueinander.. gucke ich mir morgen
-  # weiter an...
-  #scaler = StandardScaler()  
-  #scaler.fit(train_data)
-  #train_data = scaler.transform(train_data)
-  print train_data[train_data==2]
-  print train_data
-  neigh = knn(n_neighbors=k)
-  neigh.fit(train_data, train_label)
-  test = np.array([[2]]*256).reshape(1,256)
-  print np.shape(test)
-  print np.shape(train_data)
-  print np.shape(test_data)
-  predictTwo = neigh.predict(test)
-  print predictTwo
-  #predictTwo = neigh.predict([[2]])
-  #predictThree = neigh.predict([[3]])
-  #print(predictTwo)
-  #print(predictThree)
+def trainModel(num1, num2, train_data, train_label, test_data, k):
+  scaler = StandardScaler()  
+  scaler.fit(train_data)
+  train_data = scaler.transform(train_data)
+
+  values = []
+  labels = []
+  for i,x in enumerate(train_label):
+    if x == [num1] or x == [num2]:
+      values.append(train_data[i])
+      labels.append(x)
+
+  knn = classifier(n_neighbors=k)
+  knn.fit(values, np.ravel(labels)) 
+  predict = knn.predict(test_data)
+
+  print 'Prediction:\n', predict, '\n'
+  print 'Prediction probabilities:\n', knn.predict_proba(test_data)
+  # TODO training vs test error
 
 '''
 b. Plot a few example images using matplotlib.pyplot.imshow and the grayscale colormap
@@ -329,7 +328,9 @@ def main():
   
 #     plt.show()
      test_data, test_label, train_data, train_label = loadData()
-     trainTwoThree(train_data, train_label,5,test_data)
+     trainModel(2, 3, train_data, train_label, test_data, 5)
+     for k in [1, 3, 5, 7, 10, 15]:
+       trainModel(2, 3, train_data, train_label, test_data, k)
      show_random_images(test_data, test_label, 10, False)
     
 
