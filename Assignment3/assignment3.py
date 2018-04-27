@@ -284,8 +284,8 @@ c. Evaluate the performance of your classifier: Test your classifier with differ
 def errorrate(classifier, train_data, train_label, test_data, test_label):
     prediction_train = classifier.predict(train_data)
     prediction_test = classifier.predict(test_data)
-    train_error = sme.accuracy_score(train_label, prediction_train)
-    test_error = sme.accuracy_score(test_label, prediction_test)
+    train_error = 1- sme.accuracy_score(train_label, prediction_train)
+    test_error = 1- sme.accuracy_score(test_label, prediction_test)
     return train_error, test_error
     
 def generate_classifiers(digits, list):
@@ -300,8 +300,12 @@ def test_ks(digits, klist, train_data, train_label, test_data, test_label):
          test.append(test_error)
          print(train_error, test_error)
     fig = plt.figure()
-    plt.plot(train)
-    plt.plot(test)
+    plt.xlabel('k')
+    plt.ylabel('score in %')
+    plt.xticks(range(len(klist)), klist)
+    plt.plot(train, label='train score')
+    plt.plot(test, label='test score')
+    plt.legend()
     plt.show()
         
         
