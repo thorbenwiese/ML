@@ -73,7 +73,6 @@ def individual(k, args):
     a = np.zeros(args)
     for j in range(k):
         b = np.random.uniform(low=0.0, high=1.0, size=args)
-        #b.sort() # TODO welche Version richtig?
         a = a + b
     return a
 
@@ -81,9 +80,10 @@ def individual2(k, args):
     a = np.zeros(args)
     for j in range(k):
         b = np.random.uniform(low=0.0, high=1.0, size=args)
-        b.sort() # TODO welche Version richtig?
+        b.sort()
         a = a + b
     return a
+#welche Version richtig?
 #Verison 1: Werte des Arrays der Normalverteilung sind nicht sortiert -> es kommt eine Art Normalverteilung heraus
 #Version 2: Arrays sind sortiert -> eine gute Gleichverteilung wird ggf schneller erziehlt? TODO (vergleiche hierfür uniform k=20000 mit individual n=20 (20x k=1000)
  
@@ -106,21 +106,20 @@ def plotRandomCircle(radius):
   plt.title('Circle of random numbers with radius ' + str(radius))
   fig.canvas.set_window_title('circle')
   
-def plotRandomCircle2(radius):
-  x = []
-  y = []
-  for i in range(0,1000):
-      angle = np.random.uniform(0,1) * 2 * np.pi
-      r = np.random.uniform(0,1) # random factor for radius
-      x.append(np.cos(angle)*radius*r)
-      y.append(np.sin(angle)*radius*r)
-  fig = plt.figure()
-  plt.scatter(x,y)
-  plt.axes().set_aspect('equal', 'datalim')
-  plt.title('Circle of random numbers with radius ' + str(radius))
-  fig.canvas.set_window_title('circle')
-  
-#TODO auf Radius oder innerhalb Radius -> auf Kreisaußengrenzen oder innerhalb des Kreis
+# def plotRandomCircle2(radius):
+#   x = []
+#   y = []
+#   for i in range(0,1000):
+#       angle = np.random.uniform(0,1) * 2 * np.pi
+#       r = np.random.uniform(0,1) # random factor for radius
+#       x.append(np.cos(angle)*radius*r)
+#       y.append(np.sin(angle)*radius*r)
+#   fig = plt.figure()
+#   plt.scatter(x,y)
+#   plt.axes().set_aspect('equal', 'datalim')
+#   plt.title('Circle of random numbers with radius ' + str(radius))
+#   fig.canvas.set_window_title('circle')
+# # auf Radius oder innerhalb Radius -> auf Kreisaußengrenzen oder innerhalb des Kreis
 
 '''
 Assignment 2
@@ -223,13 +222,10 @@ def loadData():
     test_label = test['test_label'].astype(float)
     train_data = train['train_data'].astype(float)
     train_label = train['train_label'].astype(float)
-#     array = test['test_label'].astype(float)
-    # print(test)
-#     print(train, test)
     return test_data, test_label, train_data, train_label
 
 def trainModel(num1, num2, train_data, train_label, test_data, test_label, k):
-  # TODO ohne Skalierung sind die scores höher.....
+  #ohne Skalierung sind die scores höher.....
   #scaler = StandardScaler()  
   #scaler.fit(train_data)
   #train_data = scaler.transform(train_data)
@@ -260,14 +256,14 @@ def trainModel(num1, num2, train_data, train_label, test_data, test_label, k):
   knn.fit(train_values, train_labels) 
   predict = knn.predict(test_data)
 
-  print 'Prediction:\n', predict, '\n'
-  print 'Prediction probabilities:\n', knn.predict_proba(test_data)
+  print ('Prediction:\n', predict, '\n')
+  print ('Prediction probabilities:\n', knn.predict_proba(test_data))
 
   train_score = knn.score(train_values, train_labels)
   test_score = knn.score(test_values, test_labels)
 
-  print 'Train score: ', train_score
-  print 'Test score: ', test_score
+  print ('Train score: ', train_score)
+  print ('Test score: ', test_score)
 
   return train_score, test_score
 
@@ -347,7 +343,7 @@ def main():
      plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
      plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
      plotRandomCircle(5)
-     plotRandomCircle2(5)
+#      plotRandomCircle2(5)
   
      X = loadMatFile()
      createLinearMapping(X)
