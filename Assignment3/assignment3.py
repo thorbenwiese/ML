@@ -106,19 +106,19 @@ def plotRandomCircle(radius):
   plt.title('Circle of random numbers with radius ' + str(radius))
   fig.canvas.set_window_title('circle')
   
-# def plotRandomCircle2(radius):
-#   x = []
-#   y = []
-#   for i in range(0,1000):
-#       angle = np.random.uniform(0,1) * 2 * np.pi
-#       r = np.random.uniform(0,1) # random factor for radius
-#       x.append(np.cos(angle)*radius*r)
-#       y.append(np.sin(angle)*radius*r)
-#   fig = plt.figure()
-#   plt.scatter(x,y)
-#   plt.axes().set_aspect('equal', 'datalim')
-#   plt.title('Circle of random numbers with radius ' + str(radius))
-#   fig.canvas.set_window_title('circle')
+def plotRandomCircle2(radius):
+  x = []
+  y = []
+  for i in range(0,1000):
+      angle = np.random.uniform(0,1) * 2 * np.pi
+      r = np.random.uniform(0,1) # random factor for radius
+      x.append(np.cos(angle)*radius*r)
+      y.append(np.sin(angle)*radius*r)
+  fig = plt.figure()
+  plt.scatter(x,y)
+  plt.axes().set_aspect('equal', 'datalim')
+  plt.title('Circle of random numbers with radius ' + str(radius))
+  fig.canvas.set_window_title('circle')
 # # auf Radius oder innerhalb Radius -> auf Kreisaußengrenzen oder innerhalb des Kreis
 
 '''
@@ -343,7 +343,7 @@ def main():
      plot(binomial, [100, 1000, 10000, 100000], (10, 0.5)) # ((10, 0.5) -> (n, p)
      plot(individual, [2, 3, 5, 10, 20], 1000) # 1000 -> größe der uniform distributions die aufaddiert werden)
      plotRandomCircle(5)
-#      plotRandomCircle2(5)
+     plotRandomCircle2(5)
   
      X = loadMatFile()
      createLinearMapping(X)
