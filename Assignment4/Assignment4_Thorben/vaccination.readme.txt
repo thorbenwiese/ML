@@ -1,0 +1,39 @@
+gender
+0: female
+1: male
+
+age
+1:  0- 2 years
+2:  3- 6 years
+3:  7-10 years
+4: 11-13 years
+5: 14-17 years
+
+height
+in cm
+
+weight
+in kg
+
+residence
+1: country side
+2: town
+3: small city
+4: big city
+
+olderSiblings
+0: no older sibling
+1/2/3/4: number of older siblings
+
+knowsToRideABike
+0: no
+1: yes
+
+vacX
+0: has not been vaccinated against disease X
+1: has been vaccinated against disease X
+
+diseaseX / diseaseY / diseaseZ
+0: has never had disease X/Y/Z
+1: has had disease X/Y/Z (at some time in his / her life)
+

@@ -103,6 +103,7 @@ def knn(k, test_set):
     t = [test_set[i][-1] for i in range(len(test_set))]
     error = calculateLoss(predictions, t)
     print('error for k={0:d} is {1:f}'.format(k, error))
+    return error
 
 def main():
   # Assignment 02.2
@@ -188,9 +189,10 @@ def main():
   print ('Distance: ' + repr(distance))
   
 
+  plt.figure()
   err = []
   for k in range(2,20):
-    err.append(knn(k, X_train))
+    err.append(knn(k, X_train[:100]))
   plt.plot(err)
   
   
