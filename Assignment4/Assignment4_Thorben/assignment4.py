@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import scipy.io as sio
+import scipy.linalg
+from scipy.linalg import _fblas
+from scipy.linalg._fblas import dgemm
 
 
 '''
@@ -34,7 +37,7 @@ def determineGroups(data):
   numGirls = len(gender[gender == 0])
   print '# boys: ', numBoys
   print '# girls: ', numGirls
-  plt.figure()
+  plt.figure(figsize=(20,5))
   plt.subplot(1,3,1)
   plt.title('Number of boys and girls')
   plt.bar([1,2], [numBoys, numGirls])
@@ -126,6 +129,7 @@ def preprocessing(data):
 
 '''
 4.1.d)
+4.1.e)
 '''
 def conditionalProbabilities(data):
   plt.figure()
@@ -194,13 +198,98 @@ def conditionalProbabilities(data):
   numKtrabVacX = len(knowsToRideABike[(knowsToRideABike == 1) & (vacX == 1)])
   proba = (1.0 * numKtrabVacX) / numVacX
   print 'P(knowsToRideABike = 1 | vacX = 1) = ', proba
+  print ''
 
   '''
   Interpretation:
   The probability of having had diseaseX increases by age.
   The probability of being vaccinated against diseaseX increases by age.
   --> The vaccination does not protect the children against the disease.
+  --> Maybe the absolute values should be taken into account instead of only
+      relative values (Simpson's paradox)
   '''
+
+  # 4.1.e
+  diseaseZ = data[10]
+  numDiseaseYZvacX = len(diseaseY[(diseaseY == 1) & (diseaseZ == 1) & (vacX == 1)])
+  proba = (1.0 * numDiseaseYZvacX) / numVacX
+  print 'P(diseaseYZ = 1 | vacX = 1) = ', proba
+  numDiseaseYZNotVacX = len(diseaseY[(diseaseY == 1) & (diseaseZ == 1) & (vacX == 0)])
+  proba = (1.0 * numDiseaseYZNotVacX) / numNotVacX
+  print 'P(diseaseYZ = 1 | vacX = 0) = ', proba
+
+  numDiseaseXNotVacX = len(diseaseX[(diseaseX == 1) & (vacX == 0)])
+  numNotVacX = len(vacX[vacX == 0])
+  proba = (1.0 * numDiseaseXNotVacX) / numNotVacX
+  print 'P(diseaseX = 1 | vacX = 0) = ', proba
+  numDiseaseXVacX = len(diseaseX[(diseaseX == 1) & (vacX == 1)])
+  numVacX = len(vacX[vacX == 1])
+  proba = (1.0 * numDiseaseXVacX) / numVacX
+  print 'P(diseaseX = 1 | vacX = 1) = ', proba
+  print ''
+  # TODO zu Ende...
+
+'''
+4.2.a
+'''
+def loadAndPreprocessMatFile():
+  data = sio.loadmat('reg1d.mat')
+  X_train_file = data['X_train']
+  X_test_file = data['X_test']
+  Y_train_file = data['Y_train']
+  Y_test_file = data['Y_test']
+
+  plt.figure()
+  plt.title('Train and Test Data')
+  plt.plot(X_train_file, label='X_train')
+  plt.plot(X_test_file, label='X_test')
+  plt.plot(Y_train_file, label='Y_train')
+  plt.plot(Y_test_file, label='Y_test')
+  plt.legend()
+
+  X_train = []
+  for point in X_train_file:
+    X_train.append(np.array([point[0],1]))
+  X_test = []
+  for point in X_test_file:
+    X_test.append(np.array([point[0],1]))
+  Y_train = []
+  for point in Y_train_file:
+    Y_train.append(np.array([point[0],1]))
+  Y_test = []
+  for point in X_test_file:
+    Y_test.append(np.array([point[0],1]))
+
+  least_squares(np.array(X_train_file), np.array(Y_train_file))
+
+  return X_train, X_test, Y_train, Y_test
+
+'''
+4.2.b
+'''
+def least_squares(X,Y):
+  print 'TODO...'
+  # TODO the polyfit outputs
+  print np.polyfit(X.flatten(),Y,2)
+  print np.polyfit(X.flatten(),Y,1)
+  # TODO the own implementation for 1 d SHOULD NOT USE INV
+  a = np.vstack([X.flatten(), np.ones(len(X.flatten()))]).T
+  w = np.dot(np.linalg.inv(np.dot(a.T, a)), np.dot(a.T, Y))
+  print w
+
+  # TODO the own implementation for 2 d
+  a = X
+  b = Y
+  a = np.asarray(a, order='c')
+  i = dgemm(alpha=1.0, a=a.T, b=a.T, trans_b=True)
+  x = np.linalg.solve(i, dgemm(alpha=1.0, a=a.T, b=b)).flatten()
+  print x
+
+'''
+4.2.c
+'''
+def lossL2(Y, Y_pred):
+  return np.mean(np.power(np.array(Y)-np.array(Y_pred), 2))
 
 def main():
   data = readCsvFile()
@@ -209,6 +298,7 @@ def main():
   preprocessing(data)
   conditionalProbabilities(data)
 
+  X_train, X_test, Y_train, Y_test = loadAndPreprocessMatFile()
   plt.show()
 
 
