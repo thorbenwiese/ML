@@ -245,7 +245,6 @@ def loadAndPreprocessMatFile():
   plt.plot(X_test_file, label='X_test')
   plt.plot(Y_train_file, label='Y_train')
   plt.plot(Y_test_file, label='Y_test')
-  plt.legend()
 
   X_train = []
   for point in X_train_file:
@@ -260,30 +259,53 @@ def loadAndPreprocessMatFile():
   for point in X_test_file:
     Y_test.append(np.array([point[0],1]))
 
-  least_squares(np.array(X_train_file), np.array(Y_train_file))
+  X_train_coefs = least_squares(range(len(X_train)), X_train, 5)
+  Y_train_coefs = least_squares(range(len(Y_train)), Y_train, 5)
+
+  plt.plot(X_train_coefs.flatten(), label='Least Squares X_train')
+  plt.plot(Y_train_coefs.flatten(), label='Least Squares Y_train')
+  plt.legend()
+
+  # Compare results
+  print np.polyfit(range(len(X_train)), X_train, 10)
+  print X_train_coefs
+
+  print np.polyfit(range(len(Y_train)), Y_train, 10)
+  print Y_train_coefs
 
   return X_train, X_test, Y_train, Y_test
+
 
 '''
 4.2.b
 '''
-def least_squares(X,Y):
-  print 'TODO...'
-  # TODO the polyfit outputs
-  print np.polyfit(X.flatten(),Y,2)
-  print np.polyfit(X.flatten(),Y,1)
-  # TODO the own implementation for 1 d SHOULD NOT USE INV
-  a = np.vstack([X.flatten(), np.ones(len(X.flatten()))]).T
-  w = np.dot(np.linalg.inv(np.dot(a.T, a)), np.dot(a.T, Y))
-  print w
+def least_squares(x, y, deg):
 
-  # TODO the own implementation for 2 d
-  a = X
-  b = Y
-  a = np.asarray(a, order='c')
-  i = dgemm(alpha=1.0, a=a.T, b=a.T, trans_b=True)
-  x = np.linalg.solve(i, dgemm(alpha=1.0, a=a.T, b=b)).flatten()
-  print x
+  # convert to np array and float
+  x = np.asarray(x) + 0.0
+  y = np.asarray(y) + 0.0
+
+  # creates vandermonde matrix for 2 dimensions
+  van = np.polynomial.polynomial.polyvander(x, np.asarray(deg))
+
+  # set up the least squares matrices in transposed form
+  vanT = van.T
+  yT = y.T
+
+  # set relative condition number with regard to the machine epsilon for float
+  rcond = len(x)*np.finfo(x.dtype).eps
+
+  # Determine the norms of the design matrix columns.
+  scl = np.sqrt(np.square(vanT).sum(1))
+  scl[scl == 0] = 1
+
+  # Solve the least squares problem.
+  coefs, resids, rank, singular_vals = np.linalg.lstsq(vanT.T/scl, yT.T, rcond)
+  coefs = (coefs.T/scl).T
+
+  # return reverse of array since the order is wrong
+  return coefs[::-1]
+
 
 '''
 4.2.c
