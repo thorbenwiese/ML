@@ -33,6 +33,9 @@ def readCsvFile():
   return np.transpose(data[1:])
 
 def determineGroups(data):
+  print '-----------------'
+  print '| Aufgabe 4.1.a |'
+  print '-----------------\n'
   gender = data[0]
   numBoys = len(gender[gender == 1])
   numGirls = len(gender[gender == 0])
@@ -87,6 +90,9 @@ def determineGroups(data):
 4.1b)
 '''
 def calculateMarginalProbabilities(data):
+  print '-----------------'
+  print '| Aufgabe 4.1.b |'
+  print '-----------------\n'
   vaccination = data[7]
   allRows = len(vaccination)
   hasVaccAgainstX = (1.0 * len(vaccination[vaccination == 1])) / allRows
@@ -108,6 +114,9 @@ def calculateMarginalProbabilities(data):
 4.1.c)
 '''
 def preprocessing(data):
+  print '-----------------'
+  print '| Aufgabe 4.1.c |'
+  print '-----------------\n'
   height = data[2]
   allRows = len(height)
   tallerThanOneMeter = (1.0 * len(height[height > 100])) / allRows
@@ -133,6 +142,9 @@ def preprocessing(data):
 4.1.e)
 '''
 def conditionalProbabilities(data):
+  print '-----------------'
+  print '| Aufgabe 4.1.d |'
+  print '-----------------\n'
   plt.figure()
   plt.title('Conditional Probabilities')
 
@@ -211,11 +223,14 @@ def conditionalProbabilities(data):
   '''
 
   # 4.1.e
+  print '-----------------'
+  print '| Aufgabe 4.1.e |'
+  print '-----------------\n'
   diseaseZ = data[10]
-  numDiseaseYZvacX = len(diseaseY[(diseaseY == 1) & (diseaseZ == 1) & (vacX == 1)])
+  numDiseaseYZvacX = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 1)])
   proba = (1.0 * numDiseaseYZvacX) / numVacX
   print 'P(diseaseYZ = 1 | vacX = 1) = ', proba
-  numDiseaseYZNotVacX = len(diseaseY[(diseaseY == 1) & (diseaseZ == 1) & (vacX == 0)])
+  numDiseaseYZNotVacX = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 0)])
   proba = (1.0 * numDiseaseYZNotVacX) / numNotVacX
   print 'P(diseaseYZ = 1 | vacX = 0) = ', proba
 
@@ -228,9 +243,66 @@ def conditionalProbabilities(data):
   proba = (1.0 * numDiseaseXVacX) / numVacX
   print 'P(diseaseX = 1 | vacX = 1) = ', proba
   print ''
-  # TODO zu Ende...
 
-def aufgabe4():
+  numDiseaseYZvacXage1 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 1) & (age == 1)])
+  p11 = (1.0 * numDiseaseYZvacXage1) / numVacX
+  print 'P(diseaseYZ = 1 | vacX = 1, age = 1) = ', p11
+  numDiseaseYZNotVacXage1 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 0) & (age == 1)])
+  p12 = (1.0 * numDiseaseYZNotVacXage1) / numNotVacX
+  print 'P(diseaseYZ = 1 | vacX = 0, age = 1) = ', p12
+
+  numDiseaseYZvacXage2 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 1) & (age == 2)])
+  p21 = (1.0 * numDiseaseYZvacXage2) / numVacX
+  print 'P(diseaseYZ = 1 | vacX = 1, age = 2) = ', p21
+  numDiseaseYZNotVacXage2 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 0) & (age == 2)])
+  p22 = (1.0 * numDiseaseYZNotVacXage2) / numNotVacX
+  print 'P(diseaseYZ = 1 | vacX = 0, age = 2) = ', p22
+
+  numDiseaseYZvacXage3 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 1) & (age == 3)])
+  p31 = (1.0 * numDiseaseYZvacXage3) / numVacX
+  print 'P(diseaseYZ = 1 | vacX = 1, age = 3) = ', p31
+  numDiseaseYZNotVacXage3 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 0) & (age == 3)])
+  p32 = (1.0 * numDiseaseYZNotVacXage3) / numNotVacX
+  print 'P(diseaseYZ = 1 | vacX = 0, age = 3) = ', p32
+
+  numDiseaseYZvacXage4 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 1) & (age == 4)])
+  p41 = (1.0 * numDiseaseYZvacXage4) / numVacX
+  print 'P(diseaseYZ = 1 | vacX = 1, age = 4) = ', p41
+  numDiseaseYZNotVacXage4 = len(diseaseY[((diseaseY == 1) | (diseaseZ == 1)) & (vacX == 0) & (age == 4)])
+  p42 = (1.0 * numDiseaseYZNotVacXage4) / numNotVacX
+  print 'P(diseaseYZ = 1 | vacX = 0, age = 4) = ', p42
+  print ''
+
+  '''
+  How sure are you that your estimates for P (diseaseY Z | vacX = 0/1, 
+  age = 1/2/3/4) are accurate? What does this depend on?
+
+  --> We cannot be sure that the results are accurate, because they only depend
+      on the relative occurences in the data and do not consider the absolute
+      occurences. If the children are equally distributed by age then the
+      results will be accurate.
+  '''
+
+  plt.figure()
+  plt.title('DiseaseYZ, age=1/2/3/4 with and without vacX')
+  plt.plot([1,2,3,4], [p11,p21,p31,p41], label='vacX = 1')
+  plt.plot([1,2,3,4], [p12,p22,p32,p42], label='vacX = 0')
+  plt.legend()
+
+  '''
+  What do you conclude from your plot?
+
+  --> The probability to get diseaseY or diseaseZ if the child was vaccinated
+      against diseaseX increases by age.
+      The probability to get diseaseY or diseaseZ if the child was not
+      vaccinated against diseaseX is low for age 1 and 4 and higher for age 
+      2 and 3.
+      We conclude that getting a vaccination against diseaseX increases the
+      chance to get diseaseY or diseaseZ and that the vaccination against
+      diseaseX is more effective at age 1 and 4.
+  '''
+
+def aufgabe2():
   '''
   4.2.a
   '''
@@ -250,6 +322,9 @@ def aufgabe4():
   '''
   4.2.b
   '''
+  print '-----------------'
+  print '| Aufgabe 4.2.b |'
+  print '-----------------\n'
   r = range(len(X_train))
   
   poly1 = PolynomialFeatures(1)
@@ -261,7 +336,7 @@ def aufgabe4():
 
   func1 = np.poly1d(coefs1)
   pred1 = func1(r)
-  print pred1
+
   plt.figure()
   plt.title('Prediction 1')
   plt.plot(r, pred1)
@@ -269,7 +344,9 @@ def aufgabe4():
   '''
   4.2.d
   '''
-  print 'Aufgabe 4.2.d\n'
+  print '-----------------'
+  print '| Aufgabe 4.2.d |'
+  print '-----------------\n'
 
   poly3 = PolynomialFeatures(3)
   trans3 = poly3.fit_transform(X_train)
@@ -296,7 +373,9 @@ def aufgabe4():
   '''
   4.2.e
   '''
-  print 'Aufgabe 4.2.e\n'
+  print '-----------------'
+  print '| Aufgabe 4.2.e |'
+  print '-----------------\n'
 
   X_train = np.vstack((X_train, 1.05))
   Y_train = np.vstack((Y_train, -10))
@@ -312,7 +391,6 @@ def aufgabe4():
 
   poly1 = PolynomialFeatures(1)
   trans1 = poly1.fit_transform(X_train)
-  print trans1
 
   coefs1 = least_squares(trans1, Y_train)
   coefs1 = np.append([1], coefs1)
@@ -320,7 +398,7 @@ def aufgabe4():
 
   func1 = np.poly1d(coefs1)
   pred1 = func1(r)
-  print pred1
+
   plt.figure()
   plt.title('Prediction 1 with Outliers')
   plt.plot(r, pred1)
@@ -367,7 +445,7 @@ def main():
   preprocessing(data)
   conditionalProbabilities(data)
 
-  aufgabe4()
+  aufgabe2()
 
   plt.show()
 
