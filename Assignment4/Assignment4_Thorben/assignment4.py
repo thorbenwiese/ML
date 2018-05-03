@@ -145,7 +145,7 @@ def conditionalProbabilities(data):
   print '-----------------'
   print '| Aufgabe 4.1.d |'
   print '-----------------\n'
-  plt.figure()
+  plt.figure(figsize=(7,7))
   plt.title('Conditional Probabilities')
 
   diseaseX = data[8]
@@ -186,6 +186,7 @@ def conditionalProbabilities(data):
   plt.plot([1,2,3,4], [pDisAge1, pDisAge2, pDisAge3, pDisAge4])
   plt.xlabel('Age')
   plt.ylabel('P(disaseY|age)')
+  plt.xticks([1,2,3,4])
 
   numVacXAge1 = len(vacX[(vacX == 1) & (age == 1)])
   pVacAge1 = (1.0 * numVacXAge1) / numAge1
@@ -203,6 +204,7 @@ def conditionalProbabilities(data):
   plt.plot([1,2,3,4], [pVacAge1, pVacAge2, pVacAge3, pVacAge4])
   plt.xlabel('Age')
   plt.ylabel('P(vacX|age)')
+  plt.xticks([1,2,3,4])
 
   knowsToRideABike = data[6]
   numKtrabNotVacX = len(knowsToRideABike[(knowsToRideABike == 1) & (vacX == 0)])
@@ -287,6 +289,9 @@ def conditionalProbabilities(data):
   plt.title('DiseaseYZ, age=1/2/3/4 with and without vacX')
   plt.plot([1,2,3,4], [p11,p21,p31,p41], label='vacX = 1')
   plt.plot([1,2,3,4], [p12,p22,p32,p42], label='vacX = 0')
+  plt.xticks([1,2,3,4])
+  plt.xlabel('Age')
+  plt.ylabel('P(diseaseYZ|vacX=0/1|age)')
   plt.legend()
 
   '''
