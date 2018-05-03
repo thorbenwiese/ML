@@ -7,6 +7,7 @@ import scipy.io as sio
 import scipy.linalg
 from scipy.linalg import _fblas
 from scipy.linalg._fblas import dgemm
+from sklearn.preprocessing import PolynomialFeatures
 
 
 '''
@@ -229,89 +230,135 @@ def conditionalProbabilities(data):
   print ''
   # TODO zu Ende...
 
-'''
-4.2.a
-'''
-def loadAndPreprocessMatFile():
+def aufgabe4():
+  '''
+  4.2.a
+  '''
   data = sio.loadmat('reg1d.mat')
-  X_train_file = data['X_train']
-  X_test_file = data['X_test']
-  Y_train_file = data['Y_train']
-  Y_test_file = data['Y_test']
+  X_train = data['X_train']
+  X_test = data['X_test']
+  Y_train = data['Y_train']
+  Y_test = data['Y_test']
 
   plt.figure()
   plt.title('Train and Test Data')
-  plt.plot(X_train_file, label='X_train')
-  plt.plot(X_test_file, label='X_test')
-  plt.plot(Y_train_file, label='Y_train')
-  plt.plot(Y_test_file, label='Y_test')
+  plt.plot(X_train, label='X_train')
+  plt.plot(X_test, label='X_test')
+  plt.plot(Y_train, label='Y_train')
+  plt.plot(Y_test, label='Y_test')
 
-  X_train = []
-  for point in X_train_file:
-    X_train.append(np.array([point[0],1]))
-  X_test = []
-  for point in X_test_file:
-    X_test.append(np.array([point[0],1]))
-  Y_train = []
-  for point in Y_train_file:
-    Y_train.append(np.array([point[0],1]))
-  Y_test = []
-  for point in X_test_file:
-    Y_test.append(np.array([point[0],1]))
+  '''
+  4.2.b
+  '''
+  r = range(len(X_train))
+  
+  poly1 = PolynomialFeatures(1)
+  trans1 = poly1.fit_transform(X_train)
 
-  X_train_coefs = least_squares(range(len(X_train)), X_train, 5)
-  Y_train_coefs = least_squares(range(len(Y_train)), Y_train, 5)
+  coefs1 = least_squares(trans1, Y_train)
+  coefs1 = np.append([1], coefs1)
+  print 'Coefs1: ', coefs1, '\n'
 
-  plt.plot(X_train_coefs.flatten(), label='Least Squares X_train')
-  plt.plot(Y_train_coefs.flatten(), label='Least Squares Y_train')
-  plt.legend()
+  func1 = np.poly1d(coefs1)
+  pred1 = func1(r)
+  print pred1
+  plt.figure()
+  plt.title('Prediction 1')
+  plt.plot(r, pred1)
 
-  # Compare results
-  print np.polyfit(range(len(X_train)), X_train, 10)
-  print X_train_coefs
+  '''
+  4.2.d
+  '''
+  print 'Aufgabe 4.2.d\n'
 
-  print np.polyfit(range(len(Y_train)), Y_train, 10)
-  print Y_train_coefs
+  poly3 = PolynomialFeatures(3)
+  trans3 = poly3.fit_transform(X_train)
 
-  return X_train, X_test, Y_train, Y_test
+  coefs3 = least_squares(trans3, Y_train)
+  coefs3 = np.append([1], coefs3)
+  print 'Coefs3: ', coefs3, '\n'
 
+  func3 = np.poly1d(coefs3)
+  pred3 = func3(r)
+  plt.figure()
+  plt.title('Prediction 2')
+  plt.plot(r, pred3)
+
+  '''
+  4.2.c
+  '''
+  err1 = lossL2(Y_test, pred1)
+  print 'Err1: ', err1, '\n'
+
+  err3 = lossL2(Y_test, pred3)
+  print 'Err3: ', err3, '\n'
+
+  '''
+  4.2.e
+  '''
+  print 'Aufgabe 4.2.e\n'
+
+  X_train = np.vstack((X_train, 1.05))
+  Y_train = np.vstack((Y_train, -10))
+
+  plt.figure()
+  plt.title('Train and Test Data with Outliers')
+  plt.plot(X_train, label='X_train')
+  plt.plot(X_test, label='X_test')
+  plt.plot(Y_train, label='Y_train')
+  plt.plot(Y_test, label='Y_test')
+
+  r = range(len(X_train))
+
+  poly1 = PolynomialFeatures(1)
+  trans1 = poly1.fit_transform(X_train)
+  print trans1
+
+  coefs1 = least_squares(trans1, Y_train)
+  coefs1 = np.append([1], coefs1)
+  print 'Coefs1: ', coefs1, '\n'
+
+  func1 = np.poly1d(coefs1)
+  pred1 = func1(r)
+  print pred1
+  plt.figure()
+  plt.title('Prediction 1 with Outliers')
+  plt.plot(r, pred1)
+
+  err1 = lossL2(Y_test, pred1)
+  print 'Err1: ', err1, '\n'
+
+  poly3 = PolynomialFeatures(3)
+  trans3 = poly3.fit_transform(X_train)
+
+  coefs3 = least_squares(trans3, Y_train)
+  coefs3 = np.append([1], coefs3)
+  print 'Coefs3: ', coefs3, '\n'
+
+  func3 = np.poly1d(coefs3)
+  pred3 = func3(r)
+  plt.figure()
+  plt.title('Prediction 2 with Outliers')
+  plt.plot(r, pred3)
+
+  err3 = lossL2(Y_test, pred3)
+  print 'Err3: ', err3
 
 '''
 4.2.b
 '''
-def least_squares(x, y, deg):
-
-  # convert to np array and float
-  x = np.asarray(x) + 0.0
-  y = np.asarray(y) + 0.0
-
-  # creates vandermonde matrix for 2 dimensions
-  van = np.polynomial.polynomial.polyvander(x, np.asarray(deg))
-
-  # set up the least squares matrices in transposed form
-  vanT = van.T
-  yT = y.T
-
-  # set relative condition number with regard to the machine epsilon for float
-  rcond = len(x)*np.finfo(x.dtype).eps
-
-  # Determine the norms of the design matrix columns.
-  scl = np.sqrt(np.square(vanT).sum(1))
-  scl[scl == 0] = 1
-
-  # Solve the least squares problem.
-  coefs, resids, rank, singular_vals = np.linalg.lstsq(vanT.T/scl, yT.T, rcond)
-  coefs = (coefs.T/scl).T
-
-  # return reverse of array since the order is wrong
-  return coefs[::-1]
-
+def least_squares(X, Y):
+  # solve w = (X.T X)^-1 X.T Y
+  return np.linalg.solve(X.T.dot(X), X.T.dot(Y))
 
 '''
 4.2.c
 '''
 def lossL2(Y, Y_pred):
   return np.mean(np.power(np.array(Y)-np.array(Y_pred), 2))
+
+
+
 
 def main():
   data = readCsvFile()
@@ -320,7 +367,8 @@ def main():
   preprocessing(data)
   conditionalProbabilities(data)
 
-  X_train, X_test, Y_train, Y_test = loadAndPreprocessMatFile()
+  aufgabe4()
+
   plt.show()
 
 
