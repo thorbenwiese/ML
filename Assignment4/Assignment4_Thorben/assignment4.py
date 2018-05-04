@@ -331,14 +331,11 @@ def aufgabe2():
   print '| Aufgabe 4.2.b |'
   print '-----------------\n'
 
-  poly1 = PolynomialFeatures(1)
-  X_train = poly1.fit_transform(X_train_ori)
-  X_train = np.vander(X_train.flatten(), 2, True)
-  Y_train = poly1.fit_transform(Y_train_ori)
-  Y_train = np.vander(Y_train.flatten(), 2, True)
+  X_train = np.vander(X_train_ori.flatten(), 2, False)
+  Y_train = np.vander(Y_train_ori.flatten(), 2, False)
 
   coefs1 = least_squares(X_train, Y_train)
-  coefs1 = np.append(coefs1, [1])
+  coefs1 = np.append([1], coefs1)
   print 'Coefs1: ', coefs1, '\n'
 
   func1 = np.poly1d(coefs1)
@@ -355,11 +352,8 @@ def aufgabe2():
   print '| Aufgabe 4.2.d |'
   print '-----------------\n'
 
-  poly3 = PolynomialFeatures(3)
-  X_train = poly3.fit_transform(X_train_ori)
-  X_train = np.vander(X_train.flatten(), 4, True)
-  Y_train = poly3.fit_transform(Y_train_ori)
-  Y_train = np.vander(Y_train.flatten(), 4, True)
+  X_train = np.vander(X_train_ori.flatten(), 4, False)
+  Y_train = np.vander(Y_train_ori.flatten(), 4, False)
 
   coefs3 = least_squares(X_train, Y_train)
   coefs3 = np.append(coefs3, [1])
@@ -367,8 +361,8 @@ def aufgabe2():
 
   func3 = np.poly1d(coefs3)
   pred3 = func3(r)
-  plt.figure()
-  plt.title('Prediction 2')
+  #plt.figure()
+  #plt.title('Prediction 2')
   plt.plot(pred3, label='Pred 3 dim')
   plt.legend()
 
@@ -398,11 +392,8 @@ def aufgabe2():
 
   r = range(len(X_train_ori))
 
-  poly1 = PolynomialFeatures(1)
-  X_train = poly1.fit_transform(X_train_ori)
-  X_train = np.vander(X_train.flatten(), 2, True)
-  Y_train = poly1.fit_transform(Y_train_ori)
-  Y_train = np.vander(Y_train.flatten(), 2, True)
+  X_train = np.vander(X_train_ori.flatten(), 2, False)
+  Y_train = np.vander(Y_train_ori.flatten(), 2, False)
 
   coefs1 = least_squares(X_train, Y_train)
   coefs1 = np.append(coefs1, [1])
@@ -415,14 +406,8 @@ def aufgabe2():
   plt.xlim(0,1)
   plt.ylim(0,10)
 
-  err1 = lossL2(Y_test, pred1)
-  print 'Err1: ', err1, '\n'
-
-  poly3 = PolynomialFeatures(3)
-  X_train = poly3.fit_transform(X_train_ori)
-  X_train = np.vander(X_train.flatten(), 4, True)
-  Y_train = poly3.fit_transform(Y_train_ori)
-  Y_train = np.vander(Y_train.flatten(), 4, True)
+  X_train = np.vander(X_train.flatten(), 4, False)
+  Y_train = np.vander(Y_train.flatten(), 4, False)
 
   coefs3 = least_squares(X_train, Y_train)
   coefs3 = np.append(coefs3, [1])
@@ -430,12 +415,15 @@ def aufgabe2():
 
   func3 = np.poly1d(coefs3)
   pred3 = func3(r)
-  plt.figure()
-  plt.title('Prediction 2')
+  #plt.figure()
+  #plt.title('Prediction 2')
   plt.plot(pred3, label='Pred 3 dim')
   #plt.xlim(0,1)
   #plt.ylim(0,10)
   plt.legend()
+
+  err1 = lossL2(Y_test, pred1)
+  print 'Err1: ', err1, '\n'
 
   err3 = lossL2(Y_test, pred3)
   print 'Err3: ', err3
