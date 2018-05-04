@@ -4,10 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 import scipy.io as sio
-import scipy.linalg
-from scipy.linalg import _fblas
-from scipy.linalg._fblas import dgemm
-from sklearn.preprocessing import PolynomialFeatures
 
 
 '''
