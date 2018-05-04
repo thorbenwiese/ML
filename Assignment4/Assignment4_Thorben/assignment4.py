@@ -312,17 +312,17 @@ def aufgabe2():
   4.2.a
   '''
   data = sio.loadmat('reg1d.mat')
-  X_train = data['X_train']
+  X_train_ori = data['X_train']
   X_test = data['X_test']
-  Y_train = data['Y_train']
+  Y_train_ori = data['Y_train']
   Y_test = data['Y_test']
+
+  r = range(len(X_train_ori))
 
   plt.figure()
   plt.title('Train and Test Data')
-  plt.plot(X_train, label='X_train')
-  plt.plot(X_test, label='X_test')
-  plt.plot(Y_train, label='Y_train')
-  plt.plot(Y_test, label='Y_test')
+  plt.scatter(X_train_ori, Y_train_ori, s=3, label='Train Data')
+  plt.scatter(X_test, Y_test, s=3, label='Test Data')
 
   '''
   4.2.b
@@ -330,21 +330,23 @@ def aufgabe2():
   print '-----------------'
   print '| Aufgabe 4.2.b |'
   print '-----------------\n'
-  r = range(len(X_train))
-  
-  poly1 = PolynomialFeatures(1)
-  trans1 = poly1.fit_transform(X_train)
 
-  coefs1 = least_squares(trans1, Y_train)
-  coefs1 = np.append([1], coefs1)
+  poly1 = PolynomialFeatures(1)
+  X_train = poly1.fit_transform(X_train_ori)
+  X_train = np.vander(X_train.flatten(), 2, True)
+  Y_train = poly1.fit_transform(Y_train_ori)
+  Y_train = np.vander(Y_train.flatten(), 2, True)
+
+  coefs1 = least_squares(X_train, Y_train)
+  coefs1 = np.append(coefs1, [1])
   print 'Coefs1: ', coefs1, '\n'
 
   func1 = np.poly1d(coefs1)
   pred1 = func1(r)
 
-  plt.figure()
-  plt.title('Prediction 1')
-  plt.plot(r, pred1)
+  plt.plot(pred1, label='Pred 1 dim')
+  plt.xlim(0,1)
+  plt.ylim(0,10)
 
   '''
   4.2.d
@@ -354,17 +356,21 @@ def aufgabe2():
   print '-----------------\n'
 
   poly3 = PolynomialFeatures(3)
-  trans3 = poly3.fit_transform(X_train)
+  X_train = poly3.fit_transform(X_train_ori)
+  X_train = np.vander(X_train.flatten(), 4, True)
+  Y_train = poly3.fit_transform(Y_train_ori)
+  Y_train = np.vander(Y_train.flatten(), 4, True)
 
-  coefs3 = least_squares(trans3, Y_train)
-  coefs3 = np.append([1], coefs3)
+  coefs3 = least_squares(X_train, Y_train)
+  coefs3 = np.append(coefs3, [1])
   print 'Coefs3: ', coefs3, '\n'
 
   func3 = np.poly1d(coefs3)
   pred3 = func3(r)
   plt.figure()
   plt.title('Prediction 2')
-  plt.plot(r, pred3)
+  plt.plot(pred3, label='Pred 3 dim')
+  plt.legend()
 
   '''
   4.2.c
@@ -382,47 +388,54 @@ def aufgabe2():
   print '| Aufgabe 4.2.e |'
   print '-----------------\n'
 
-  X_train = np.vstack((X_train, 1.05))
-  Y_train = np.vstack((Y_train, -10))
+  X_train_ori = np.vstack((X_train_ori, 1.05))
+  Y_train_ori = np.vstack((Y_train_ori, -10))
 
   plt.figure()
-  plt.title('Train and Test Data with Outliers')
-  plt.plot(X_train, label='X_train')
-  plt.plot(X_test, label='X_test')
-  plt.plot(Y_train, label='Y_train')
-  plt.plot(Y_test, label='Y_test')
+  plt.title('Train and Test Data with Outlier')
+  plt.scatter(X_train_ori, Y_train_ori, s=3, label='Train Data')
+  plt.scatter(X_test, Y_test, s=3, label='Test Data')
 
-  r = range(len(X_train))
+  r = range(len(X_train_ori))
 
   poly1 = PolynomialFeatures(1)
-  trans1 = poly1.fit_transform(X_train)
+  X_train = poly1.fit_transform(X_train_ori)
+  X_train = np.vander(X_train.flatten(), 2, True)
+  Y_train = poly1.fit_transform(Y_train_ori)
+  Y_train = np.vander(Y_train.flatten(), 2, True)
 
-  coefs1 = least_squares(trans1, Y_train)
-  coefs1 = np.append([1], coefs1)
+  coefs1 = least_squares(X_train, Y_train)
+  coefs1 = np.append(coefs1, [1])
   print 'Coefs1: ', coefs1, '\n'
 
   func1 = np.poly1d(coefs1)
   pred1 = func1(r)
 
-  plt.figure()
-  plt.title('Prediction 1 with Outliers')
-  plt.plot(r, pred1)
+  plt.plot(pred1, label='Pred 1 dim')
+  plt.xlim(0,1)
+  plt.ylim(0,10)
 
   err1 = lossL2(Y_test, pred1)
   print 'Err1: ', err1, '\n'
 
   poly3 = PolynomialFeatures(3)
-  trans3 = poly3.fit_transform(X_train)
+  X_train = poly3.fit_transform(X_train_ori)
+  X_train = np.vander(X_train.flatten(), 4, True)
+  Y_train = poly3.fit_transform(Y_train_ori)
+  Y_train = np.vander(Y_train.flatten(), 4, True)
 
-  coefs3 = least_squares(trans3, Y_train)
-  coefs3 = np.append([1], coefs3)
+  coefs3 = least_squares(X_train, Y_train)
+  coefs3 = np.append(coefs3, [1])
   print 'Coefs3: ', coefs3, '\n'
 
   func3 = np.poly1d(coefs3)
   pred3 = func3(r)
   plt.figure()
-  plt.title('Prediction 2 with Outliers')
-  plt.plot(r, pred3)
+  plt.title('Prediction 2')
+  plt.plot(pred3, label='Pred 3 dim')
+  #plt.xlim(0,1)
+  #plt.ylim(0,10)
+  plt.legend()
 
   err3 = lossL2(Y_test, pred3)
   print 'Err3: ', err3
