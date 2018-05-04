@@ -331,7 +331,6 @@ def aufgabe2():
   Y_train = np.vander(Y_train_ori.flatten(), 2, False)
 
   coefs1 = least_squares(X_train, Y_train)
-  coefs1 = np.append([1], coefs1)
   print 'Coefs1: ', coefs1, '\n'
 
   func1 = np.poly1d(coefs1)
@@ -352,14 +351,25 @@ def aufgabe2():
   Y_train = np.vander(Y_train_ori.flatten(), 4, False)
 
   coefs3 = least_squares(X_train, Y_train)
-  coefs3 = np.append(coefs3, [1])
   print 'Coefs3: ', coefs3, '\n'
 
   func3 = np.poly1d(coefs3)
   pred3 = func3(r)
-  #plt.figure()
-  #plt.title('Prediction 2')
   plt.plot(pred3, label='Pred 3 dim')
+
+  # TODO is this the desired output?
+  # --
+  '''
+  for i in [2,3]:
+    #[1,2,3,4,5,15]:
+    pf = np.polyfit(X_train_ori.flatten(), Y_train_ori.flatten(), i)
+    p = np.poly1d(pf)
+    pr = p(r)
+    print p(r)
+    plt.plot(r, pr, label='Polyfit ' + str(i))
+  '''
+  # --
+
   plt.legend()
 
   '''
@@ -392,7 +402,6 @@ def aufgabe2():
   Y_train = np.vander(Y_train_ori.flatten(), 2, False)
 
   coefs1 = least_squares(X_train, Y_train)
-  coefs1 = np.append(coefs1, [1])
   print 'Coefs1: ', coefs1, '\n'
 
   func1 = np.poly1d(coefs1)
@@ -406,16 +415,24 @@ def aufgabe2():
   Y_train = np.vander(Y_train.flatten(), 4, False)
 
   coefs3 = least_squares(X_train, Y_train)
-  coefs3 = np.append(coefs3, [1])
   print 'Coefs3: ', coefs3, '\n'
 
   func3 = np.poly1d(coefs3)
   pred3 = func3(r)
-  #plt.figure()
-  #plt.title('Prediction 2')
   plt.plot(pred3, label='Pred 3 dim')
-  #plt.xlim(0,1)
-  #plt.ylim(0,10)
+
+  # TODO is this the desired output?
+  # --
+  '''
+  for i in [2,3]:
+    pf = np.polyfit(X_train_ori.flatten(), Y_train_ori.flatten(), i)
+    p = np.poly1d(pf)
+    pr = p(r)
+    print pr
+    plt.plot(r, pr, label='Polyfit ' + str(i))
+  '''
+  # --
+
   plt.legend()
 
   err1 = lossL2(Y_test, pred1)
@@ -429,15 +446,16 @@ def aufgabe2():
 '''
 def least_squares(X, Y):
   # solve w = (X.T X)^-1 X.T Y
-  return np.linalg.solve(X.T.dot(X), X.T.dot(Y))
+  # This is too inaccurate
+  # return np.linalg.solve(X.T.dot(X), X.T.dot(Y))
+  # TODO append [1] to it for multiplying vandemonde matrix? (Folie 148)
+  return np.linalg.lstsq(X, Y)[0].flatten()
 
 '''
 4.2.c
 '''
 def lossL2(Y, Y_pred):
   return np.mean(np.power(np.array(Y)-np.array(Y_pred), 2))
-
-
 
 
 def main():
