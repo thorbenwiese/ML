@@ -357,7 +357,6 @@ def aufgabe2():
   pred3 = func3(r)
   plt.plot(pred3, label='Pred 3 dim')
 
-  # TODO is this the desired output?
   # --
   '''
   for i in [2,3]:
@@ -417,21 +416,10 @@ def aufgabe2():
   coefs3 = least_squares(X_train, Y_train)
   print 'Coefs3: ', coefs3, '\n'
 
-  func3 = np.poly1d(coefs3)
+  func3 = np.poly1d(coefs3[::-1])
   pred3 = func3(r)
   plt.plot(pred3, label='Pred 3 dim')
 
-  # TODO is this the desired output?
-  # --
-  '''
-  for i in [2,3]:
-    pf = np.polyfit(X_train_ori.flatten(), Y_train_ori.flatten(), i)
-    p = np.poly1d(pf)
-    pr = p(r)
-    print pr
-    plt.plot(r, pr, label='Polyfit ' + str(i))
-  '''
-  # --
 
   plt.legend()
 
@@ -447,8 +435,7 @@ def aufgabe2():
 def least_squares(X, Y):
   # solve w = (X.T X)^-1 X.T Y
   # This is too inaccurate
-  # return np.linalg.solve(X.T.dot(X), X.T.dot(Y))
-  # TODO append [1] to it for multiplying vandemonde matrix? (Folie 148)
+  #return np.linalg.solve(X.T.dot(X), X.T.dot(Y))
   return np.linalg.lstsq(X, Y)[0].flatten()
 
 '''
