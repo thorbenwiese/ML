@@ -1,15 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io as sio
+import random
+import timeit
 from sklearn.svm import SVC
 from sklearn.svm import LinearSVC
 from sklearn.metrics import zero_one_loss
 from matplotlib.pyplot import plot
+from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 
 ######## 1b ###############
 '''
 How do you configure and train the SVM
-TODO SVC Konfiguration allgemein
+There are some attributes for the configuration: penalty parameter c of the error term, kernel, ...
+We used the default configuration
+http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
 For training we use fit(X, y[, sample_weight]), where X is a list of training vectors and y contains 
 the related target values. There is the possibility to weight samples. 
 
@@ -34,9 +40,9 @@ In LinearSVC multi_class="ovr" trains n_classes one-vs-rest classifiers, while "
 (Details siehe http://scikit-learn.org/stable/modules/multiclass.html)
 
 
-    
 ######## 2a ###############
 '''
+fignum = 1
 data = sio.loadmat('cancer-data.mat')
 input_train = data['cancerInput_train']
 target_train = data['cancerTarget_train'].flatten()
@@ -59,6 +65,7 @@ for c in Cs:
     test_error.append(t_error)
     print(c, " train:", error) #TODO richtig für train error?
     print(c, " test:", t_error)
+plt.figure(fignum)
 plt.plot(range(len(Cs)), errors, label ='train_error')
 plt.plot(range(len(Cs)), test_error, label='test_error')
 legend = plt.legend(loc='upper center', shadow=True)
@@ -67,24 +74,21 @@ plt.xticks(np.arange(7), Cs)
 plt.xlabel('C')
 plt.ylabel('error')
 plt.title('2a')
-plt.show()
-    #TODO 0 1 loss?
-    #prediction = clf.predict(input_test)
-    #print(c, ":", zero_one_loss(target_test, prediction))
+fignum += 1
     
 '''
 What is the effect of choosing a large C on the training error?
 Choosing a large C results in a decreasing training error.
 
 Does this effect coincide with what you are expecting?
-C is the penalty parameter of the error term. So a increasing C tells the SVM optimization 
+Yes, because C is the penalty parameter of the error term. So a increasing C tells the SVM optimization 
 how much you want to avoid misclassifying each training example.
-TODO expected
 '''
 
 
 ######## 2b ###############
-def test_kernels(t, t_label, title):
+def test_kernels(t, t_label, plottrain, title):
+    plt.figure(fignum)
     for kern in ['linear', 'poly', 'rbf', 'sigmoid']:#, 'precomputed']:
         errors = []
         test_error = []
@@ -100,25 +104,86 @@ def test_kernels(t, t_label, title):
             t_error = zero_one_loss(target_test, prediction)
             test_error.append(t_error)
             print(kern, c, " test:", t_error)
-        plt.plot(range(len(Cs)), errors, label=kern+ ' train')
+        if plottrain:
+            plt.plot(range(len(Cs)), errors, label=kern+ ' train')
         plt.plot(range(len(Cs)), test_error, label=kern+ ' test')
     legend = plt.legend(loc='upper center', shadow=True)
     plt.xticks(np.arange(7), Cs)
     plt.title(title)
     plt.xlabel('C')
     plt.ylabel('error')
-    plt.show()
+    global fignum
+    fignum +=1
     
-test_kernels(input_train, target_train, '2b train')
+#TODO cross validation? Soll das hier einfach train-test sein oder was anderes?
+    
+test_kernels(input_train, target_train, True, '2b')
 '''
 Which SVM kernel performs best on the test data?
-For a large C : sigmoid
+linear with large C
 '''
 
 ######## 2c ###############
-test_kernels(input_test, target_test, '2b test')
+test_kernels(input_test, target_test, True, '2c')
 '''
 What bevaviour do you observe now?
-Error increas in comprahension to train error TODO
+Test Error increase in comparison to train error TODO
+'''
+plt.show()
+
+######## 3 ###############
+usps_test = sio.loadmat('usps_test.mat')
+test_data = usps_test['test_data']
+test_label = usps_test['test_label'].flatten()
+usps_train = sio.loadmat('usps_train.mat')
+train_data = usps_train['train_data']
+train_label = usps_train['train_label'].flatten()
+
+reg= LinearRegression()
+reg.fit(train_data,train_label)
+#print(reg.predict(test_data))
+#print(test_label)
+
+def knn(d, n, k):
+    #TODO Dimension?
+    # TODO für USPS oder für cancer-data?
+    ran = range(0,len(train_data))
+    sample = random.sample(ran, n)
+    t = [train_data[x] for x in sample]
+    tl = [train_label[x] for x in sample]
+    start = timeit.default_timer()
+    knn = KNeighborsRegressor(k)
+    knn.fit(t, tl)
+    knn.predict(test_data)
+    stop = timeit.default_timer()
+    print ('knn d=',d,' n=',n,' k=',k, ' ->' , stop - start)
+    
+knn(1, 1000, 5)
+for n in [100,500, 1000, 3000, 5000, 7000, 10000]:
+    for k in [1,2,3,5,10]:
+        knn(1, n, k)
+        
+#clf = SVC(decision_function_shape='ovr') # ovr = one-vs-rest,  ovo = one-vs-one
+
+'''
+What is the computational complexity of predicting a new data point for a SVM?  (m support
+vectors after training)
+
+Linear SVM has prediction complexity O(d) with d the number of input dimensions since it is 
+just a single inner product. Prediction complexity of kernel SVM depends on the choice of 
+kernel and is typically proportional to the number of support vectors. For most kernels,
+including polynomial and RBF, this is O(nSVd) where nSV is the number of support vectors.
+
+
+How much information do you need to store for predicting with each of these methods (space
+complexity)?
+TODO
+
+For a specific example, consider a one-against-the-rest classifier for the full USPS dataset
+(d = 256, n = 10000), assume k = 10 for kNN and m = 1000 support vectors for the SVM
+classifier. How many operations and how much memory is needed?
+TODO
+
+
 '''
 
