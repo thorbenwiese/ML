@@ -63,7 +63,7 @@ for c in Cs:
     prediction = clf.predict(input_test)
     t_error = zero_one_loss(target_test, prediction)
     test_error.append(t_error)
-    print(c, " train:", error) #TODO richtig für train error?
+    print(c, " train:", error)
     print(c, " test:", t_error)
 plt.figure(fignum)
 plt.plot(range(len(Cs)), errors, label ='train_error')
@@ -90,29 +90,36 @@ how much you want to avoid misclassifying each training example. TODO outlier we
 #TODO (gridsearchcv,  crossvalidation -> ) auch Werte für gamma und degree -> zb gamma 3-4 plots
 #https://chrisalbon.com/machine_learning/model_evaluation/cross_validation_parameter_tuning_grid_search/
 def test_kernels(t, t_label, plottrain, title):
-    plt.figure(fignum)
-    for kern in ['linear', 'poly', 'rbf', 'sigmoid']:#, 'precomputed']:
-        errors = []
-        test_error = []
-        for c in Cs:
-            clf = SVC(C=c, kernel=kern, degree=3, gamma='auto', coef0=0.0, shrinking=True, 
-                      probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, 
-                      max_iter=-1, decision_function_shape='ovr', random_state=None)
-            model = clf.fit(t, t_label)
-            #error = 1- model.score(t, t_label)
-            error = zero_one_loss(target_train, clf.predict(input_train))
-            errors.append(error)
-            print(kern, c, "train:", error)
-            prediction = clf.predict(input_test)
-            t_error = zero_one_loss(target_test, prediction)
-            test_error.append(t_error)
-            print(kern, c, " test:", t_error)
-        if plottrain:
-            plt.plot(range(len(Cs)), errors, label=kern+ ' train')
-        plt.plot(range(len(Cs)), test_error, label=kern+ ' test')
-    plt.legend(loc='upper center', shadow=True)
-    plt.xticks(np.arange(7), Cs)
-    plt.title(title)
+    f, axarr = plt.subplots(2, 2)
+    counter = 0
+    counter2 = 0
+    for gamma in [0.1,1,10,100]:
+        for kern in ['linear', 'poly', 'rbf', 'sigmoid']:#, 'precomputed']:
+            errors = []
+            test_error = []
+            for c in Cs:
+                clf = SVC(C=c, kernel=kern, degree=3, gamma=gamma, coef0=0.0, shrinking=True, 
+                          probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, 
+                          max_iter=-1, decision_function_shape='ovr', random_state=None)
+                model = clf.fit(t, t_label)
+                #error = 1- model.score(t, t_label)
+                error = zero_one_loss(target_train, clf.predict(input_train))
+                errors.append(error)
+                print(kern, c, "train:", error)
+                prediction = clf.predict(input_test)
+                t_error = zero_one_loss(target_test, prediction)
+                test_error.append(t_error)
+                print(kern, c, " test:", t_error)
+            if plottrain:
+                axarr[int(counter/2), counter2 %2].plot(range(len(Cs)), errors, label=kern+ ' train')
+            axarr[int(counter/2), counter2 %2].plot(range(len(Cs)), test_error, label=kern+ ' test')
+        axarr[int(counter/2), counter2 %2].set_title('gamma='+str(gamma))
+        counter += 1
+        counter2 += 1
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=3, borderaxespad=0.)
+    plt.setp(axarr, xticks=range(len(Cs)), xticklabels=Cs, xlabel='C', ylabel='error')
+    #plt.title(title)
+    f.canvas.set_window_title(title)
     plt.xlabel('C')
     plt.ylabel('error')
     global fignum
@@ -121,14 +128,15 @@ def test_kernels(t, t_label, plottrain, title):
 test_kernels(input_train, target_train, True, '2b')
 '''
 Which SVM kernel performs best on the test data?
-TODO -> linear schlechter als andere -> rbf best
+For most configurations rbf performs best on the test data. 
 '''
 
 ######## 2c ###############
 test_kernels(input_test, target_test, True, '2c')
 '''
 What bevaviour do you observe now?
-Test Error increase in comparison to train error
+There are some differences in the order of kernel-quality. The reason for this might be statistical differences
+between train- and test set. 
 '''
 plt.show()
 
@@ -159,7 +167,6 @@ def knn(d, n, k):
     stop = timeit.default_timer()
     print ('knn d=',d,' n=',n,' k=',k, ' ->' , stop - start)
     
-knn(1, 1000, 5)
 for n in [100,500, 1000, 3000, 5000, 7000, 10000]:
     for k in [1,2,3,5,10]:
         for d in [1,10,100,255]:
