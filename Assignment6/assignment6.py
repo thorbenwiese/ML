@@ -53,12 +53,12 @@ Cs = [0.01, 0.1, 0.5, 1, 5, 10, 50]
 errors =[]
 test_error = []
 for c in Cs:
-    clf = LinearSVC(C=c, class_weight=None, dual=True, fit_intercept=True,
+    clf = LinearSVC(C=c, class_weight=None, dual=True, fit_intercept=True, #TODO linear oder anderen?
          intercept_scaling=1, loss='squared_hinge', max_iter=1000,
          multi_class='ovr', penalty='l2', random_state=0, tol=0.0001,
          verbose=0)
     model = clf.fit(input_train, target_train)
-    error = 1- model.score(input_train, target_train)
+    error = 1- model.score(input_train, target_train) #TODO predict(train_data) -> zeroloss(trainlabel)
     errors.append(error)
     prediction = clf.predict(input_test)
     t_error = zero_one_loss(target_test, prediction)
@@ -82,11 +82,13 @@ Choosing a large C results in a decreasing training error.
 
 Does this effect coincide with what you are expecting?
 Yes, because C is the penalty parameter of the error term. So a increasing C tells the SVM optimization 
-how much you want to avoid misclassifying each training example.
+how much you want to avoid misclassifying each training example. TODO outlier werden betrachtet
 '''
 
 
 ######## 2b ###############
+#TODO (gridsearchcv,  crossvalidation -> ) auch Werte für gamma und degree -> zb gamma 3-4 plots
+#https://chrisalbon.com/machine_learning/model_evaluation/cross_validation_parameter_tuning_grid_search/
 def test_kernels(t, t_label, plottrain, title):
     plt.figure(fignum)
     for kern in ['linear', 'poly', 'rbf', 'sigmoid']:#, 'precomputed']:
@@ -97,7 +99,7 @@ def test_kernels(t, t_label, plottrain, title):
                       probability=False, tol=0.001, cache_size=200, class_weight=None, verbose=False, 
                       max_iter=-1, decision_function_shape='ovr', random_state=None)
             model = clf.fit(t, t_label)
-            error = 1- model.score(t, t_label)
+            error = 1- model.score(t, t_label) # todo predict, loss,...
             errors.append(error)
             print(kern, c, "train:", error)
             prediction = clf.predict(input_test)
@@ -115,19 +117,17 @@ def test_kernels(t, t_label, plottrain, title):
     global fignum
     fignum +=1
     
-#TODO cross validation? Soll das hier einfach train-test sein oder was anderes?
-    
 test_kernels(input_train, target_train, True, '2b')
 '''
 Which SVM kernel performs best on the test data?
-linear with large C
+TODO -> linear schlechter als andere -> rbf best
 '''
 
 ######## 2c ###############
 test_kernels(input_test, target_test, True, '2c')
 '''
 What bevaviour do you observe now?
-Test Error increase in comparison to train error TODO
+Test Error increase in comparison to train error
 '''
 plt.show()
 
@@ -164,7 +164,7 @@ for n in [100,500, 1000, 3000, 5000, 7000, 10000]:
         knn(1, n, k)
         
 #clf = SVC(decision_function_shape='ovr') # ovr = one-vs-rest,  ovo = one-vs-one
-
+# TODO Werte O(nd+kn)
 '''
 What is the computational complexity of predicting a new data point for a SVM?  (m support
 vectors after training)
@@ -174,15 +174,20 @@ just a single inner product. Prediction complexity of kernel SVM depends on the 
 kernel and is typically proportional to the number of support vectors. For most kernels,
 including polynomial and RBF, this is O(nSVd) where nSV is the number of support vectors.
 
+TODO O(md) running time
+
 
 How much information do you need to store for predicting with each of these methods (space
 complexity)?
 TODO
+O(nd) für knn und O(md) für SVM
 
 For a specific example, consider a one-against-the-rest classifier for the full USPS dataset
 (d = 256, n = 10000), assume k = 10 for kNN and m = 1000 support vectors for the SVM
 classifier. How many operations and how much memory is needed?
 TODO
+
+TODO mit O(nd) usw für computation und space ausrechen für knn und SVM
 
 
 '''
