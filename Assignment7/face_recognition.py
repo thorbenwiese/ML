@@ -105,7 +105,7 @@ print("Fitting the classifier to the training set")
 t0 = time()
 param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
               'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
-clf = GridSearchCV(SVC(kernel='rbf', class_weight='auto'), param_grid)
+clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
 clf = clf.fit(X_train_pca, y_train)
 print("done in %0.3fs" % (time() - t0))
 print("Best estimator found by grid search:")
@@ -156,4 +156,32 @@ plot_gallery(X_test, prediction_titles, h, w)
 eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
 plot_gallery(eigenfaces, eigenface_titles, h, w)
 
-plt.show()
+
+import numpy as np
+'''
+Aufgabe 7.3 b)
+'''
+print("\nAufgabe 7.3 b)\n")
+print(np.shape(lfw_people.data))
+print(lfw_people.data[0])
+
+print("The dataset contains of " + str(np.shape(lfw_people.data)[0]) + " images.")
+print("Each image has " + str(np.shape(lfw_people.data)[1]) + " pixels")
+
+maxSize = 0
+minSize = 0
+for img in lfw_people.images:
+  mi = np.min(img)
+  ma = np.max(img)
+  if minSize == 0 or mi < minSize:
+    minSize = mi
+  if maxSize == 0 or ma > maxSize:
+    maxSize = ma
+
+print("The pixel values range from " + str(minSize) + " to " + str(maxSize) + ".")
+
+
+print("\n")
+plt.figure()
+
+#plt.show()
