@@ -65,7 +65,8 @@ def analyse(print2console, print2file):
      
 def random_images(set, i, sample_size):
     choices = random.sample(list(set), i)
-    print('choosen (name, image count, image count >= sample_size):', [(x, len(set[x]['images']), len(set[x]['images']) >= sample_size) for x in choices])
+    print('choosen (name, image count, image count >= sample_size):', 
+          [(x, len(set[x]['images']), len(set[x]['images']) >= sample_size) for x in choices])
     for choice in choices:
         sample_size_temp = sample_size
         fig = plt.figure()
@@ -73,20 +74,14 @@ def random_images(set, i, sample_size):
             # try-except da für einige Personen nur 1 Bild und 1 < sample_size
             try:
                 sample = random.sample(set[choice]['images'], sample_size_temp)
-                print(choice, sample)
+                print(choice)
+                pprint.pprint(sample, width=1)
+                print('\n\n')
                 images = [s['path'] for s in sample]
-                widths = [s['width'] for s in sample]
-                heights = [s['height'] for s in sample]
-                m = map(Image.open, images)
-                total_width = sum(widths)
-                max_height = max(heights)
-                new_im = Image.new('RGB', (total_width, max_height))
-                x_offset = 0
-                for im in m:
-                    new_im.paste(im, (x_offset,0))
-                    x_offset += im.size[0]
-                #new_im.show(title=choice) # Image.show()
-                plt.imshow(new_im)
+                for i in range(len(images)):
+                    x = fig.add_subplot(1,sample_size_temp,i+1)
+                    x.set_title(sample[i]['class'])
+                    plt.imshow(Image.open(images[i]))
                 fig.canvas.set_window_title(choice)
             except ValueError:
                 sample_size_temp -= 1
