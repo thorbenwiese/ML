@@ -30,13 +30,14 @@ from __future__ import print_function
 from time import time
 import logging
 import matplotlib.pyplot as plt
+import numpy as np
 
 from sklearn.cross_validation import train_test_split
 from sklearn.datasets import fetch_lfw_people
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
-from sklearn.decomposition import RandomizedPCA
+from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 
 
@@ -86,7 +87,7 @@ n_components = 150
 print("Extracting the top %d eigenfaces from %d faces"
       % (n_components, X_train.shape[0]))
 t0 = time()
-pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
+pca = PCA(svd_solver='randomized', n_components=n_components, whiten=True).fit(X_train)
 print("done in %0.3fs" % (time() - t0))
 
 eigenfaces = pca.components_.reshape((n_components, h, w))
@@ -133,7 +134,7 @@ def plot_gallery(images, titles, h, w, n_row=3, n_col=4):
     plt.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
     for i in range(n_row * n_col):
         plt.subplot(n_row, n_col, i + 1)
-        plt.imshow(images[i].reshape((h, w)), cmap=plt.cm.gray)
+        plt.imshow(images[i].reshape((h, w)), cmap=plt.get_cmap('gray'))
         plt.title(titles[i], size=12)
         plt.xticks(())
         plt.yticks(())
@@ -157,7 +158,7 @@ eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
 plot_gallery(eigenfaces, eigenface_titles, h, w)
 
 
-import numpy as np
+
 '''
 Aufgabe 7.3 b)
 '''
@@ -182,6 +183,30 @@ print("The pixel values range from " + str(minSize) + " to " + str(maxSize) + ".
 
 
 print("\n")
-plt.figure()
 
-#plt.show()
+'''
+Aufgabe 7.3 b)
+'''
+print('-'*20, ' 3c ', '-'*20)
+#https://stackoverflow.com/questions/31909945/obtain-eigen-values-and-vectors-from-sklearn-pca?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+n_samples = X.shape[0]
+# We center the data and compute the sample covariance matrix.
+X -= np.mean(X, axis=0)
+cov_matrix = np.dot(X.T, X) / n_samples
+eigenvalues = []
+for eigenvector in pca.components_:
+    eigenvalue = np.dot(eigenvector.T, np.dot(cov_matrix, eigenvector))
+    eigenvalues.append(eigenvalue)
+print('eigenvalues:', eigenvalues)
+fig = plt.figure()
+plt.hist(eigenvalues)
+fig.canvas.set_window_title('3c')
+
+#https://stackoverflow.com/questions/36566844/pca-projecting-and-reconstruction-in-scikit?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+X_projected = pca.inverse_transform(X_train_pca)
+loss = ((X_train - X_projected) ** 2).mean()
+print('projection loss:', loss)
+print('-'*45)
+
+
+plt.show()
