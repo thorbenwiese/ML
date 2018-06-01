@@ -1,0 +1,10 @@
+Aufgabe 7.2
+
+a)
+
+
+b)
+
+If the eigenvector v = [0,1,1,1]^T covers 85% of the data variance, then this 
+means for this example that the age of the participants does not have a 
+significant impact on the data and can therefore be neglected.
