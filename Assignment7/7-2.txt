@@ -2,6 +2,10 @@ Aufgabe 7.2
 
 a)
 
+An eigenvector describes the direction of a squared matrix and a matrix can 
+only have as many eigenvectors as dimensions. If one eigenvector covers most of 
+the data variance then this means that the data is mostly spread in one 
+dimension and that therefore one dimension is the most important one.
 
 b)
 
