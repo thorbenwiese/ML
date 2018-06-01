@@ -31,6 +31,8 @@ from time import time
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
+import re
+import statistics as stat
 
 from sklearn.cross_validation import train_test_split
 from sklearn.datasets import fetch_lfw_people
@@ -184,10 +186,12 @@ print("The pixel values range from " + str(minSize) + " to " + str(maxSize) + ".
 
 print("\n")
 
+
 '''
-Aufgabe 7.3 b)
+Aufgabe 7.3 c)
 '''
-print('-'*20, ' 3c ', '-'*20)
+print('-'*50)
+print("\nAufgabe 7.3 c)\n")
 #https://stackoverflow.com/questions/31909945/obtain-eigen-values-and-vectors-from-sklearn-pca?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 n_samples = X.shape[0]
 # We center the data and compute the sample covariance matrix.
@@ -208,5 +212,109 @@ loss = ((X_train - X_projected) ** 2).mean()
 print('projection loss:', loss)
 print('-'*45)
 
+#plt.show()
 
-plt.show()
+#TODO  Is the initial choice of nc = 150 principal components a good choice?
+
+'''
+Aufgabe 7.3 d)
+'''
+
+def d(steps):
+    begin = t0 = time()
+    print("\nAufgabe 7.3 d)\n")
+    result = []
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25)
+    list = [10, 25, 50, 75, 100, 250]
+    for j in range(steps):
+        result_step = []
+        for n_components in list:
+            start = time()
+            print('='*50)
+            print("Extracting the top %d eigenfaces from %d faces"
+                  % (n_components, X_train.shape[0]))
+            t0 = time()
+            pca = PCA(svd_solver='randomized', n_components=n_components, whiten=True).fit(X_train)
+            print("done in %0.3fs" % (time() - t0))
+            
+            eigenfaces = pca.components_.reshape((n_components, h, w))
+            
+            print("Projecting the input data on the eigenfaces orthonormal basis")
+            t0 = time()
+            X_train_pca = pca.transform(X_train)
+            X_test_pca = pca.transform(X_test)
+            print("done in %0.3fs" % (time() - t0))
+            
+            
+            ###############################################################################
+            # Train a SVM classification model
+            
+            print("Fitting the classifier to the training set")
+            t0 = time()
+            param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
+                          'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
+            clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+            clf = clf.fit(X_train_pca, y_train)
+            print("done in %0.3fs" % (time() - t0))
+            print("Best estimator found by grid search:")
+            print(clf.best_estimator_)
+            
+            
+            ###############################################################################
+            # Quantitative evaluation of the model quality on the test set
+            
+            print("Predicting people's names on the test set")
+            t0 = time()
+            y_pred = clf.predict(X_test_pca)
+            print("done in %0.3fs" % (time() - t0))
+            report = classification_report(y_test, y_pred, target_names=target_names)
+            avg = re.search('avg / total       (.+?)      ', report)
+            result_step.append(float(avg.group(1)))
+            print(report)
+            #print(confusion_matrix(y_test, y_pred, labels=range(n_classes)))
+            print("time %0.3fs" % (time() - start))
+        result.append(result_step)
+    result = np.transpose(result)
+    for i in range(len(list)):
+        print(list[i], '->', stat.mean(result[i]))
+    print("time %0.3fs" % (time() - begin))
+        
+'''
+Which is the smallest number of principal components that still results
+in acceptable recognition results?
+
+I d(3): 
+    10 -> 0.47
+    25 -> 0.76
+    50 -> 0.863333333333
+    75 -> 0.87
+    100 -> 0.88
+    250 -> 0.833333333333
+    
+II d(3):
+    10 -> 0.43
+    25 -> 0.733333333333
+    50 -> 0.846666666667
+    75 -> 0.853333333333
+    100 -> 0.83
+    250 -> 0.816666666667
+    
+III d(3):
+    10 -> 0.436666666667
+    25 -> 0.726666666667
+    50 -> 0.813333333333
+    75 -> 0.853333333333
+    100 -> 0.843333333333
+    250 -> 0.833333333333
+
+'''
+
+d(3) # Achtung, mehrere Minuten Rechenaufwand (279.812s), ggf 3 reduzieren und list verkleinern
+
+
+'''
+Aufgabe 7.3 )
+No, precision <-> performance
+'''
+
