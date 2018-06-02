@@ -1,0 +1,9 @@
+Aufgabe 7.3
+
+e)
+
+The Eigenfaces algorithm could be used for automated passport control (ABC) 
+systems. It will have a good accuracy if the images taken from the passengers 
+have high quality and if the passenger's look hasn't changed a lot, e.g. is 
+wearing glasses or a beard. However, there will always be a risk that people use 
+passports of other people that look alike and trick the system in that way.
