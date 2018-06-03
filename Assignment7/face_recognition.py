@@ -165,9 +165,6 @@ plot_gallery(eigenfaces, eigenface_titles, h, w)
 Aufgabe 7.3 b)
 '''
 print("\nAufgabe 7.3 b)\n")
-print(np.shape(lfw_people.data))
-print(lfw_people.data[0])
-
 print("The dataset contains of " + str(np.shape(lfw_people.data)[0]) + " images.")
 print("Each image has " + str(np.shape(lfw_people.data)[1]) + " pixels")
 
@@ -201,10 +198,16 @@ eigenvalues = []
 for eigenvector in pca.components_:
     eigenvalue = np.dot(eigenvector.T, np.dot(cov_matrix, eigenvector))
     eigenvalues.append(eigenvalue)
+
+eigvals = pca.explained_variance_
 print('eigenvalues:', eigenvalues)
+print('\neigenvalues2:', eigvals)
 fig = plt.figure()
 plt.hist(eigenvalues)
-fig.canvas.set_window_title('3c')
+fig.canvas.set_window_title('3c calculated')
+fig = plt.figure()
+plt.hist(eigvals)
+fig.canvas.set_window_title('3c extracted')
 
 #https://stackoverflow.com/questions/36566844/pca-projecting-and-reconstruction-in-scikit?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 X_projected = pca.inverse_transform(X_train_pca)
@@ -214,7 +217,7 @@ print('-'*45)
 
 #plt.show()
 
-#TODO  Is the initial choice of nc = 150 principal components a good choice?
+# Is the initial choice of nc = 150 principal components a good choice?
 
 '''
 Aufgabe 7.3 d)
@@ -226,7 +229,7 @@ def d(steps):
     result = []
     X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.25)
-    list = [10, 25, 50, 75, 100, 250]
+    list = [10, 25, 50, 75, 100, 150, 250]
     for j in range(steps):
         result_step = []
         for n_components in list:
