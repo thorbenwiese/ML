@@ -215,7 +215,7 @@ loss = ((X_train - X_projected) ** 2).mean()
 print('projection loss:', loss)
 print('-'*45)
 
-#plt.show()
+plt.show()
 
 # Is the initial choice of nc = 150 principal components a good choice?
 
