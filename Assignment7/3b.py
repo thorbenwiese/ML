@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from PIL import Image
 from matplotlib import pyplot as plt
 import glob, os
