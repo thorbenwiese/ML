@@ -39,3 +39,22 @@ sparsity = (len(v) * 1.0) / numpy.ma.size(A)
 
 to get the sparsity percentage.
 '''
+
+import numpy as np
+import scipy as sp
+import scipy.sparse
+
+'''
+Aufgabe 8d)
+'''
+def tridiagonal(n):
+
+  diags = np.array([np.random.randint(10, size=n),
+                    np.random.randint(10, size=n),
+                    np.random.randint(10, size=n)])
+  positions = [-1, 0, 1]
+  print sp.sparse.spdiags(diags, positions, n, n).todense()
+  print ''
+
+tridiagonal(5)
+tridiagonal(10)
