@@ -19,6 +19,14 @@ csr_matrix is the Compressed Sparse Row Format (CSR)
 The data is stores as arrays of rows and their values at each column
 Very efficient at accessing row-vectors or performing row-operations
 
+b)
+
+The COO Format offers a way to change the rows, columns and values from a 
+matrix and is therefore a good choice for inserting nonzero values.
+
+The CSR Format is best suited for multiplying the matrix with a vector or 
+another matrix since it is row based and therefore a good choice for matrix 
+multiplication.
 
 c)
 
