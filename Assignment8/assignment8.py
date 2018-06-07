@@ -58,3 +58,35 @@ def tridiagonal(n):
 
 tridiagonal(5)
 tridiagonal(10)
+
+
+'''
+Aufgabe 8.2
+'''
+from sklearn.datasets import fetch_20newsgroups
+
+twenty_train = fetch_20newsgroups(categories=['alt.atheism', 'comp.graphics', 'sci.med', 'soc.religion.christian'], shuffle=True, random_state=41)
+
+texts = twenty_train.data
+labels = twenty_train.target
+names = twenty_train.filenames
+
+print '-' * 20
+print 'Assignment 8.2 a)'
+print '-' * 20
+print ''
+print 'Number of loaded texts: ', len(names)
+print ''
+
+from sklearn.feature_extraction.text import CountVectorizer
+count_vect = CountVectorizer()
+X_train_counts = count_vect.fit_transform(twenty_train.data)
+n_samples, n_features = X_train_counts.shape
+
+print '-' * 20
+print 'Assignment 8.2 b)'
+print '-' * 20
+print ''
+print 'Number of words found: ', str(n_features)
+print 'Access to dictionary through count_vect.vocabulary_'
+print 'Index of \'disorganized\': ', count_vect.vocabulary_['disorganized']
