@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import numpy as np
+import scipy as sp
+import scipy.sparse
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+
 '''
 Aufgabe 8.1
 a)
@@ -38,14 +47,8 @@ i, j, v = scipy.sparse.find(A)
 sparsity = (len(v) * 1.0) / numpy.ma.size(A)
 
 to get the sparsity percentage.
-'''
 
-import numpy as np
-import scipy as sp
-import scipy.sparse
-
-'''
-Aufgabe 8d)
+d)
 '''
 def tridiagonal(n):
 
@@ -59,34 +62,90 @@ def tridiagonal(n):
 tridiagonal(5)
 tridiagonal(10)
 
+print '-' * 25
+print 'Assignment 8.2 a) - c)'
+print '-' * 25
+print ''
 
+def text_classification(count_vect):
+
+  '''
+  Aufgabe 8.2
+  '''
+  categories = ['alt.atheism', 'soc.religion.christian',
+	    'comp.graphics', 'sci.med']
+  
+  twenty_train = fetch_20newsgroups(categories=categories,
+                                    shuffle=True,
+                                    random_state=41)
+  
+  texts = twenty_train.data
+  labels = twenty_train.target
+  names = twenty_train.filenames
+  
+  print 'Number of loaded texts: ', len(names)
+  print ''
+  
+  X_train_counts = count_vect.fit_transform(twenty_train.data)
+  n_samples, n_features = X_train_counts.shape
+
+  print 'Number of words found: ', str(n_features)
+  print 'Access to dictionary through count_vect.vocabulary_'
+  print 'Index of \'disorganized\': ', count_vect.vocabulary_['disorganized']
+  print ''
+  
+  tf_transformer = TfidfTransformer(use_idf=False).fit(X_train_counts)
+  X_train_tf = tf_transformer.transform(X_train_counts)
+  
+  tfidf_transformer = TfidfTransformer()
+  X_train_tfidf = tfidf_transformer.fit_transform(X_train_counts)
+  
+  clf = MultinomialNB().fit(X_train_tfidf, twenty_train.target)
+  
+  docs_new = ['God is love', 'OpenGL on the GPU is fast', 'Machine Learning is fun', 'The winner takes it all']
+  X_new_counts = count_vect.transform(docs_new)
+  X_new_tfidf = tfidf_transformer.transform(X_new_counts)
+  
+  predicted = clf.predict(X_new_tfidf)
+  
+  for doc, category in zip(docs_new, predicted):
+    print('%r => %s' % (doc, twenty_train.target_names[category]))
+  print ''
+  
+  text_clf = Pipeline([('vect', count_vect),
+                      ('tfidf', TfidfTransformer()),
+                      ('clf', MultinomialNB())])
+  
+  text_clf.fit(twenty_train.data, twenty_train.target)
+  
+  twenty_test = fetch_20newsgroups(subset='test',
+    categories=categories, shuffle=True, random_state=42)
+  docs_test = twenty_test.data
+  predicted = text_clf.predict(docs_test)
+  print 'Accuracy: ', str(np.mean(predicted == twenty_test.target))
+  print ''
+
+
+cv = CountVectorizer()
+text_classification(cv)
+
+print '-' * 20
+print 'Assignment 8.2 d)'
+print '-' * 20
+print '''
+The stop_words parameter defines which words are removed from the bag of words 
+in order to not tokenize very frequent and meaningless words, such as \'a\', 
+\'an\', \'or\', \'it\' and so on.
 '''
-Aufgabe 8.2
+
+cve = CountVectorizer(stop_words='english')
+text_classification(cve)
+
+print '-' * 20
+print 'Assignment 8.2 e)'
+print '-' * 20
+print '''
+Occurences might favor longer documents because they have higher word 
+counts. Frequencies show the relative count and are therefore a more balanced 
+approach.
 '''
-from sklearn.datasets import fetch_20newsgroups
-
-twenty_train = fetch_20newsgroups(categories=['alt.atheism', 'comp.graphics', 'sci.med', 'soc.religion.christian'], shuffle=True, random_state=41)
-
-texts = twenty_train.data
-labels = twenty_train.target
-names = twenty_train.filenames
-
-print '-' * 20
-print 'Assignment 8.2 a)'
-print '-' * 20
-print ''
-print 'Number of loaded texts: ', len(names)
-print ''
-
-from sklearn.feature_extraction.text import CountVectorizer
-count_vect = CountVectorizer()
-X_train_counts = count_vect.fit_transform(twenty_train.data)
-n_samples, n_features = X_train_counts.shape
-
-print '-' * 20
-print 'Assignment 8.2 b)'
-print '-' * 20
-print ''
-print 'Number of words found: ', str(n_features)
-print 'Access to dictionary through count_vect.vocabulary_'
-print 'Index of \'disorganized\': ', count_vect.vocabulary_['disorganized']
