@@ -3,6 +3,8 @@
 import numpy as np
 import scipy as sp
 import scipy.sparse
+import time
+from pympler import asizeof
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -52,15 +54,56 @@ d)
 '''
 def tridiagonal(n):
 
-  diags = np.array([np.random.randint(10, size=n),
-                    np.random.randint(10, size=n),
-                    np.random.randint(10, size=n)])
+  diags = np.array([np.random.randint(1, 10, size=n),
+                    np.random.randint(1, 10, size=n),
+                    np.random.randint(1, 10, size=n)])
   positions = [-1, 0, 1]
-  print sp.sparse.spdiags(diags, positions, n, n).todense()
-  print ''
+  m = sp.sparse.spdiags(diags, positions, n, n).todense()
 
-tridiagonal(5)
-tridiagonal(10)
+  return m
+  
+print '-' * 20
+print 'Assignment 8.1 d)'
+print '-' * 20
+print ''
+print tridiagonal(5)
+print ''
+print tridiagonal(10)
+print ''
+
+print '-' * 20
+print 'Assignment 8.1 e)'
+print '-' * 20
+print ''
+
+sparse_time = 0
+sparse_space = 0
+
+dense_time = 0
+dense_space = 0
+
+for n in [10, 100, 1000, 10000]:
+  b = np.ones(n)
+
+  time_start = time.clock()
+  A = sp.sparse.csr_matrix(tridiagonal(n))
+  x = sp.sparse.linalg.spsolve(A,b)
+  sparse_time = sparse_time + (time.clock() - time_start)
+  sparse_space = sparse_space + asizeof.asizeof(x)
+
+  time_start = time.clock()
+  A = sp.sparse.csr_matrix(tridiagonal(n))
+  x = sp.linalg.solve(A.todense(),b)
+  dense_time = dense_time + (time.clock() - time_start)
+  dense_space = sparse_space + asizeof.asizeof(x)
+
+print 'Calculation with sparse matrices took', str(sparse_time), 'seconds and ', str(sparse_space), ' bytes of memory.'
+print 'Calculation with dense matrices took', str(dense_time), 'seconds and ', str(dense_space), ' bytes of memory.'
+
+'''
+Aufgabe 8.1 e)
+'''
+
 
 print '-' * 25
 print 'Assignment 8.2 a) - c)'
