@@ -1,5 +1,6 @@
 b.) Compare the classifier scores (e.g. accuracy, precision) with the above runs.
 	In general the score decrease if you filter. At nearly every classifier this decrease amounts to 10-15% in average. An exception of this is kNN where the decrease amounts to more than 50% (0.86 -> 0.26).
 c.) Look at the confusion matrices. Can you explain some of the mispredictions?
+	The results doesn't distinguish between b and c as much, with exception of knn. If we compare confusion matrix the filtered-argument effects in a small matrix (with less classes), the all-categories-argument results in a large matrix (with all classes). So it seems like the misprediction of knn is a result of filtering. If there aren't differentiated classes the percentage of misclassification increase for knn. (Anothere hypthese Near neighbours could be recognized on headers and so on.)
 d.) Is any one classifier the clear winner for this task?
 	No, there isn't a clear winner for the tasks. The Classifiers' scores are mostly quit similar. But there are some classifiers - for e.g. MultinomialNB - which have small training- and test time beside a good score. Some classifiers benefits from filtering in task b (large time requirements, e.g. SGD) more than other (small time requirements, e.g. BernoulliNB). 
