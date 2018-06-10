@@ -1,0 +1,450 @@
+
+======================================================
+Classification of text documents using sparse features
+======================================================
+
+This is an example showing how scikit-learn can be used to classify documents
+by topics using a bag-of-words approach. This example uses a scipy.sparse
+matrix to store the features and demonstrates various classifiers that can
+efficiently handle sparse matrices.
+
+The dataset used in this example is the 20 newsgroups dataset. It will be
+automatically downloaded, then cached.
+
+The bar plot indicates the accuracy, training time (normalized) and test time
+(normalized) of each classifier.
+
+
+Usage: document_classification_20newsgroups.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  --report              Print a detailed classification report.
+  --chi2_select=SELECT_CHI2
+                        Select some number of features using a chi-squared
+                        test
+  --confusion_matrix    Print the confusion matrix.
+  --top10               Print ten most discriminative terms per class for
+                        every classifier.
+  --all_categories      Whether to use all categories or not.
+  --use_hashing         Use a hashing vectorizer.
+  --n_features=N_FEATURES
+                        n_features when using the hashing vectorizer.
+  --filtered            Remove newsgroup information that is easily overfit:
+                        headers, signatures, and quoting.
+
+Loading 20 newsgroups dataset for categories:
+['alt.atheism', 'talk.religion.misc', 'comp.graphics', 'sci.space']
+data loaded
+2034 documents - 3.980MB (training set)
+1353 documents - 2.867MB (test set)
+4 categories
+
+Extracting features from the training data using a sparse vectorizer
+done in 0.539649s at 7.374MB/s
+n_samples: 2034, n_features: 33809
+
+Extracting features from the test data using the same vectorizer
+done in 0.311198s at 9.214MB/s
+n_samples: 1353, n_features: 33809
+
+================================================================================
+Ridge Classifier
+________________________________________________________________________________
+Training: 
+RidgeClassifier(alpha=1.0, class_weight=None, copy_X=True, fit_intercept=True,
+        max_iter=None, normalize=False, random_state=None, solver='lsqr',
+        tol=0.01)
+train time: 0.196s
+test time:  0.001s
+accuracy:   0.897
+dimensionality: 33809
+density: 1.000000
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.87      0.83      0.85       319
+     comp.graphics       0.90      0.98      0.94       389
+         sci.space       0.96      0.94      0.95       394
+talk.religion.misc       0.83      0.78      0.80       251
+
+       avg / total       0.90      0.90      0.90      1353
+
+confusion matrix:
+[[266   9   7  37]
+ [  1 381   4   3]
+ [  0  23 371   0]
+ [ 40  10   6 195]]
+
+================================================================================
+Perceptron
+________________________________________________________________________________
+Training: 
+Perceptron(alpha=0.0001, class_weight=None, eta0=1.0, fit_intercept=True,
+      max_iter=None, n_iter=50, n_jobs=1, penalty=None, random_state=0,
+      shuffle=True, tol=None, verbose=0, warm_start=False)
+train time: 0.127s
+test time:  0.002s
+accuracy:   0.885
+dimensionality: 33809
+density: 0.240165
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.85      0.81      0.83       319
+     comp.graphics       0.91      0.96      0.94       389
+         sci.space       0.93      0.94      0.94       394
+talk.religion.misc       0.80      0.77      0.79       251
+
+       avg / total       0.88      0.89      0.88      1353
+
+confusion matrix:
+[[259   8   9  43]
+ [  4 373   9   3]
+ [  5  15 372   2]
+ [ 36  12   9 194]]
+
+================================================================================
+Passive-Aggressive
+________________________________________________________________________________
+Training: 
+PassiveAggressiveClassifier(C=1.0, average=False, class_weight=None,
+              fit_intercept=True, loss='hinge', max_iter=None, n_iter=50,
+              n_jobs=1, random_state=None, shuffle=True, tol=None,
+              verbose=0, warm_start=False)
+train time: 0.186s
+test time:  0.002s
+accuracy:   0.907
+dimensionality: 33809
+density: 0.690282
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.86      0.85      0.85       319
+     comp.graphics       0.93      0.98      0.95       389
+         sci.space       0.96      0.95      0.96       394
+talk.religion.misc       0.84      0.80      0.82       251
+
+       avg / total       0.91      0.91      0.91      1353
+
+confusion matrix:
+[[270   6   8  35]
+ [  3 380   3   3]
+ [  2  15 376   1]
+ [ 38   7   5 201]]
+
+================================================================================
+kNN
+________________________________________________________________________________
+Training: 
+KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+           metric_params=None, n_jobs=1, n_neighbors=10, p=2,
+           weights='uniform')
+train time: 0.002s
+test time:  0.201s
+accuracy:   0.858
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.78      0.90      0.84       319
+     comp.graphics       0.89      0.89      0.89       389
+         sci.space       0.90      0.91      0.90       394
+talk.religion.misc       0.86      0.67      0.75       251
+
+       avg / total       0.86      0.86      0.86      1353
+
+confusion matrix:
+[[287   3  11  18]
+ [ 14 348  19   8]
+ [  7  26 359   2]
+ [ 59  13  12 167]]
+
+================================================================================
+Random forest
+________________________________________________________________________________
+Training: 
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+            max_depth=None, max_features='auto', max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=1,
+            oob_score=False, random_state=None, verbose=0,
+            warm_start=False)
+train time: 2.141s
+test time:  0.091s
+accuracy:   0.837
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.84      0.75      0.79       319
+     comp.graphics       0.80      0.97      0.87       389
+         sci.space       0.92      0.89      0.90       394
+talk.religion.misc       0.78      0.66      0.72       251
+
+       avg / total       0.84      0.84      0.83      1353
+
+confusion matrix:
+[[239  24  12  44]
+ [  0 377   9   3]
+ [  1  43 350   0]
+ [ 46  30   9 166]]
+
+================================================================================
+L2 penalty
+________________________________________________________________________________
+Training: 
+LinearSVC(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+     multi_class='ovr', penalty='l2', random_state=None, tol=0.001,
+     verbose=0)
+train time: 0.206s
+test time:  0.001s
+accuracy:   0.900
+dimensionality: 33809
+density: 1.000000
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.87      0.83      0.85       319
+     comp.graphics       0.91      0.98      0.95       389
+         sci.space       0.96      0.95      0.95       394
+talk.religion.misc       0.83      0.79      0.81       251
+
+       avg / total       0.90      0.90      0.90      1353
+
+confusion matrix:
+[[266   7   8  38]
+ [  2 381   3   3]
+ [  1  20 373   0]
+ [ 38   9   6 198]]
+
+________________________________________________________________________________
+Training: 
+SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,
+       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+       learning_rate='optimal', loss='hinge', max_iter=None, n_iter=50,
+       n_jobs=1, penalty='l2', power_t=0.5, random_state=None,
+       shuffle=True, tol=None, verbose=0, warm_start=False)
+train time: 0.149s
+test time:  0.002s
+accuracy:   0.902
+dimensionality: 33809
+density: 0.666258
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.87      0.83      0.85       319
+     comp.graphics       0.92      0.97      0.95       389
+         sci.space       0.96      0.95      0.95       394
+talk.religion.misc       0.82      0.81      0.81       251
+
+       avg / total       0.90      0.90      0.90      1353
+
+confusion matrix:
+[[265   7   7  40]
+ [  1 379   4   5]
+ [  1  19 373   1]
+ [ 36   7   5 203]]
+
+================================================================================
+L1 penalty
+________________________________________________________________________________
+Training: 
+LinearSVC(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+     multi_class='ovr', penalty='l1', random_state=None, tol=0.001,
+     verbose=0)
+train time: 0.316s
+test time:  0.002s
+accuracy:   0.873
+dimensionality: 33809
+density: 0.005568
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.85      0.75      0.80       319
+     comp.graphics       0.89      0.97      0.93       389
+         sci.space       0.94      0.94      0.94       394
+talk.religion.misc       0.76      0.78      0.77       251
+
+       avg / total       0.87      0.87      0.87      1353
+
+confusion matrix:
+[[238  14  11  56]
+ [  0 378   7   4]
+ [  2  22 369   1]
+ [ 39  12   4 196]]
+
+________________________________________________________________________________
+Training: 
+SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,
+       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+       learning_rate='optimal', loss='hinge', max_iter=None, n_iter=50,
+       n_jobs=1, penalty='l1', power_t=0.5, random_state=None,
+       shuffle=True, tol=None, verbose=0, warm_start=False)
+train time: 0.404s
+test time:  0.002s
+accuracy:   0.888
+dimensionality: 33809
+density: 0.020231
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.87      0.78      0.82       319
+     comp.graphics       0.92      0.96      0.94       389
+         sci.space       0.93      0.95      0.94       394
+talk.religion.misc       0.78      0.80      0.79       251
+
+       avg / total       0.89      0.89      0.89      1353
+
+confusion matrix:
+[[249   9  12  49]
+ [  1 375   8   5]
+ [  2  14 376   2]
+ [ 35   8   7 201]]
+
+================================================================================
+Elastic-Net penalty
+________________________________________________________________________________
+Training: 
+SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,
+       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+       learning_rate='optimal', loss='hinge', max_iter=None, n_iter=50,
+       n_jobs=1, penalty='elasticnet', power_t=0.5, random_state=None,
+       shuffle=True, tol=None, verbose=0, warm_start=False)
+train time: 0.584s
+test time:  0.002s
+accuracy:   0.898
+dimensionality: 33809
+density: 0.187517
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.87      0.83      0.85       319
+     comp.graphics       0.92      0.98      0.95       389
+         sci.space       0.95      0.94      0.95       394
+talk.religion.misc       0.81      0.79      0.80       251
+
+       avg / total       0.90      0.90      0.90      1353
+
+confusion matrix:
+[[264   7   8  40]
+ [  0 380   4   5]
+ [  2  19 372   1]
+ [ 39   7   6 199]]
+
+================================================================================
+NearestCentroid (aka Rocchio classifier)
+________________________________________________________________________________
+Training: 
+NearestCentroid(metric='euclidean', shrink_threshold=None)
+train time: 0.011s
+test time:  0.003s
+accuracy:   0.855
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.88      0.69      0.77       319
+     comp.graphics       0.84      0.97      0.90       389
+         sci.space       0.96      0.92      0.94       394
+talk.religion.misc       0.72      0.79      0.75       251
+
+       avg / total       0.86      0.86      0.85      1353
+
+confusion matrix:
+[[219  25   5  70]
+ [  1 379   5   4]
+ [  1  30 361   2]
+ [ 29  19   5 198]]
+
+================================================================================
+Naive Bayes
+________________________________________________________________________________
+Training: 
+MultinomialNB(alpha=0.01, class_prior=None, fit_prior=True)
+train time: 0.010s
+test time:  0.002s
+accuracy:   0.899
+dimensionality: 33809
+density: 1.000000
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.85      0.87      0.86       319
+     comp.graphics       0.95      0.95      0.95       389
+         sci.space       0.92      0.95      0.94       394
+talk.religion.misc       0.86      0.77      0.81       251
+
+       avg / total       0.90      0.90      0.90      1353
+
+confusion matrix:
+[[279   2   8  30]
+ [  2 369  16   2]
+ [  3  15 376   0]
+ [ 45   4   9 193]]
+
+________________________________________________________________________________
+Training: 
+BernoulliNB(alpha=0.01, binarize=0.0, class_prior=None, fit_prior=True)
+train time: 0.012s
+test time:  0.012s
+accuracy:   0.884
+dimensionality: 33809
+density: 1.000000
+
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.83      0.88      0.86       319
+     comp.graphics       0.88      0.96      0.92       389
+         sci.space       0.94      0.91      0.92       394
+talk.religion.misc       0.87      0.73      0.79       251
+
+       avg / total       0.88      0.88      0.88      1353
+
+confusion matrix:
+[[282   9   3  25]
+ [  1 373  13   2]
+ [  5  31 358   0]
+ [ 50  10   8 183]]
+
+================================================================================
+LinearSVC with L1-based feature selection
+________________________________________________________________________________
+Training: 
+Pipeline(memory=None,
+     steps=[('feature_selection', SelectFromModel(estimator=LinearSVC(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+     intercept_scaling=1, loss='squared_hinge', max_iter=1000,
+     multi_class='ovr', penalty='l1', random_state=None, tol=0.001,
+     verbose=0),
+        norm_order=1, prefit=...ax_iter=1000,
+     multi_class='ovr', penalty='l2', random_state=None, tol=0.0001,
+     verbose=0))])
+train time: 0.276s
+test time:  0.003s
+accuracy:   0.880
+classification report:
+                    precision    recall  f1-score   support
+
+       alt.atheism       0.84      0.80      0.82       319
+     comp.graphics       0.91      0.96      0.93       389
+         sci.space       0.93      0.95      0.94       394
+talk.religion.misc       0.81      0.76      0.78       251
+
+       avg / total       0.88      0.88      0.88      1353
+
+confusion matrix:
+[[254  11  13  41]
+ [  2 374   9   4]
+ [  2  18 373   1]
+ [ 44   9   8 190]]
+
