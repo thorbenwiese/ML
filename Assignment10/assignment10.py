@@ -2,6 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import scipy
+from scipy import misc
+import matplotlib.pyplot as plt
 
 # read CSV file and return columns
 def readCSVFile(f, train):
@@ -48,12 +51,17 @@ def readCSVFile(f, train):
 def main():
 
   print('Reading files...')
-  index_ids, index_urls = readCSVFile("landmark-recog/google-landmarks-dataset/index.csv", False)
-  train_ids, train_urls, train_landmark_ids = readCSVFile("landmark-recog/google-landmarks-dataset/train.csv", True)
-  test_ids, test_urls = readCSVFile("landmark-recog/google-landmarks-dataset/test.csv", False)
+  #index_ids, index_urls = readCSVFile("landmark-recog/google-landmarks-dataset/index.csv", False)
+  #train_ids, train_urls, train_landmark_ids = readCSVFile("landmark-recog/google-landmarks-dataset/train.csv", True)
+  #test_ids, test_urls = readCSVFile("landmark-recog/google-landmarks-dataset/test.csv", False)
   print('Files Read.')
   
-
+  img = misc.imread('/Users/wiese/Downloads/images/fdbac32ad9bbf6e5.jpg')
+  print img.shape
+  print img.dtype
+  print img.max(), img.min()
+  plt.imshow(img, cmap=plt.cm.gray)
+  plt.show()
 
 
 

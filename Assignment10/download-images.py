@@ -11,5 +11,8 @@ if __name__ == '__main__':
       skip = 0
       for row in readCSV:
         if skip != 0:
-          wget.download(row[1], '/Users/wiese/Downloads/images/' + str(row[0]) + '.jpg') 
+          try:
+            wget.download(row[1], '/Volumes/WIESE/landmark-images/' + str(row[0]) + '.jpg') 
+          except:
+            print 'DOWNLOAD FAILED FOR ID:', str(row[0])
         skip = 42
