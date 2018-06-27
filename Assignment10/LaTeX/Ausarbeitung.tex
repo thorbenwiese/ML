@@ -1,9 +1,40 @@
 \chapter{Introduction}
+
+Kaggle is a platform owned by the Kaggle Inc. which is owned by Alphabet Inc. (Google) providing multiple so called challenges in the field of data science, predictive modeling and data analysis. The Kaggle challenge aims at solving so far unsolved tasks or finding a better solution for already solved tasks in a crowdsourcing fashion. Some challenges can be solved for monetary prices, others are hosted for knowledge or training purposes. In order to solve a challenge one must register and submit a solution to the platform to get a score for the submitted solution \cite{kaggle}.
+
+The Google Landmark Recognition Challenge aims at detecting different landmarks in images, such as the Eiffel Tower or the Leaning Tower of Pisa \cite{challenge}.
+
+We chose the Google Landmark Recognition Challenge because we are interested in image processing tasks and the challenge provides a lot of training data. We also wanted to try out Convolutional (Deep) Neural Networks which we previously discussed in the lecture.
+
+The data provided with the challenge contains of three CSV files. The index.csv file contains the IDs and URLs for all images that should be used in the challenge. There is also one file for training (train.csv) providing the IDs, URLs and Landmark IDs and one for testing (test.csv) providing IDs and URLs \cite{data}.
+
+In order to work with the images we wrote a script to scrape all URLs and download the images to our local machine. The script will be provided in the appendix.
+
+Our approach is to first analyse the data to get a good understanding of it with the help of characteristic numerical values such as value ranges, min or max values and variances, which will be plotted for better visual understanding.
+
 \chapter{Data Analysis}
+
+Since the data provided with this challenge is contained purely out of images, we will focus on image-related characteristical numerical values for our analysis.
+
+We selected the dimenions of the images, the amount of pixels, the pixel range (from min to max) and the pixel variance (max - min) to get a better understanding of what the images' shapes are.
+
+imbalances, non-normalized features
+
+extract features
+
+are they correlated
+
+cluster features with respect to correlation coefficient
+
+which features are important
+
+preprocess data
+
+cluster data (or explain why not possible) (maybe cluster only some features)
+
+dimensionality reduction method (e.g. PCA) or CNN Feature Map?
 
 \section*{Interesting Features}
 \section*{...}
-
-\cite{gsa-skript}
 
 \chapter{Conclusion}
