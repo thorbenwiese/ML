@@ -33,16 +33,35 @@ def readCSVFile(f, train):
 
 
 
+def getStatistics(img):
+
+  print img.shape
+  print img.dtype
+  print img.max(), img.min()
+  # mean, median, variances, empirical probabilities
+  # imbalances, non-normalized features
 
 
 
 
 
+def extractFeatures(img):
+  # extract features
+  # are they correlated
+  # cluster features with respect to correlation coefficient
+  # which features are important
+  print 'Features extracted.'
 
 
+def preprocessData(img):
+  # preprocess data
+  # cluster data (or explain why not possible) (maybe cluster only some features)
+  print 'Data preprocessed.'
 
 
-
+def dimReduction(img):
+  # dimensionality reduction method (e.g. PCA) or CNN Feature Map?
+  print 'Dimensions Reduced.'
 
 
 
@@ -56,12 +75,14 @@ def main():
   #test_ids, test_urls = readCSVFile("landmark-recog/google-landmarks-dataset/test.csv", False)
   print('Files Read.')
   
-  img = misc.imread('/Users/wiese/Downloads/images/fdbac32ad9bbf6e5.jpg')
-  print img.shape
-  print img.dtype
-  print img.max(), img.min()
-  plt.imshow(img, cmap=plt.cm.gray)
-  plt.show()
+  imgId = 'fdbac32ad9bbf6e5'
+  try:
+    img = misc.imread('/Users/wiese/Downloads/images/' + imgId + '.jpg')
+    x = getStatistics(img)
+    plt.imshow(img, cmap=plt.cm.gray)
+    plt.show()
+  except:
+    print 'Image with ID:', imgId, 'could not be read!'
 
 
 
