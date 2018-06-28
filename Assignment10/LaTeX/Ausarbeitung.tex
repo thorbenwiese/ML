@@ -6,7 +6,7 @@ The Google Landmark Recognition Challenge aims at detecting different landmarks 
 
 We chose the Google Landmark Recognition Challenge because we are interested in image processing tasks and the challenge provides a lot of training data. We also wanted to try out Convolutional (Deep) Neural Networks which we previously discussed in the lecture.
 
-The data provided with the challenge contains of three CSV files. The index.csv file contains the IDs and URLs for all images that should be used in the challenge. There is also one file for training (train.csv) providing the IDs, URLs and Landmark IDs and one for testing (test.csv) providing IDs and URLs \cite{data}.
+The data provided with the challenge contains mainly of two CSV files. The file for training (train.csv) providing the IDs, URLs and Landmark IDs and the file for testing (test.csv) providing IDs and URLs \cite{data}.
 
 In order to work with the images we wrote a script to scrape all URLs and download the images to our local machine. The script will be provided in the appendix.
 
@@ -16,7 +16,22 @@ Our approach is to first analyse the data to get a good understanding of it with
 
 Since the data provided with this challenge is contained purely out of images, we will focus on image-related characteristical numerical values for our analysis.
 
-We selected the dimenions of the images, the amount of pixels, the pixel range (from min to max) and the pixel variance (max - min) to get a better understanding of what the images' shapes are.
+We selected the distribution of landmarks, the dimenions of the images, the amount of pixels, the pixel range (from min to max) and the pixel variance (max - min) to get a better understanding of what the images' shapes are.
+
+\begin{center}
+	\includegraphics[width=\textwidth]{images/Landmark_ID_occurences}
+	
+	\begin{figure}[t]
+		\includegraphics[width=\textwidth]{images/9633}
+		\caption{Image for Landmark\_ID 9633}
+	\end{figure}
+	
+	\begin{figure}[t]
+		\includegraphics[width=\textwidth]{images/6051}
+		\caption{Image for Landmark\_ID 6051}
+	\end{figure}
+\end{center}
+
 
 imbalances, non-normalized features
 
