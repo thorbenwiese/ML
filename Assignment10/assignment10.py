@@ -94,12 +94,22 @@ def main():
   print "Test data size", test_data.shape
   print ''
 
+  c = train_data.landmark_id.value_counts()
+
+  print c.keys().tolist()
+  print c.tolist()
+
+  plt.figure()
+  plt.hist(c.keys().tolist())
+
   # Occurance of landmark_id in decreasing order(Top categories)
   temp = pd.DataFrame(train_data.landmark_id.value_counts().head(5))
   temp.reset_index(inplace=True)
   temp.columns = ['Landmark_ID','Occurence']
   print temp
   print ''
+
+  '''
 
   # Plot the most frequent landmark_ids
   plt.figure(figsize = (7, 5))
@@ -212,6 +222,8 @@ def main():
   plt.figure()
   plt.hist(numPixels, bins='auto')
   plt.title('numPixels Hist')
+
+  '''
 
 # execute main
 if __name__ == "__main__":
