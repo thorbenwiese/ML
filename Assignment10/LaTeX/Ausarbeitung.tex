@@ -18,20 +18,26 @@ Since the data provided with this challenge is contained purely out of images, w
 
 We selected the distribution of landmarks, the dimenions of the images, the amount of pixels, the pixel range (from min to max) and the pixel variance (max - min) to get a better understanding of what the images' shapes are.
 
-\begin{center}
-	\includegraphics[width=\textwidth]{images/Landmark_ID_occurences}
-	
-	\begin{figure}[t]
-		\includegraphics[width=\textwidth]{images/9633}
-		\caption{Image for Landmark\_ID 9633}
-	\end{figure}
-	
-	\begin{figure}[t]
-		\includegraphics[width=\textwidth]{images/6051}
-		\caption{Image for Landmark\_ID 6051}
-	\end{figure}
-\end{center}
+The training dataset holds 1225029 URLs to images and the corresponding IDs and Landmark IDs. The five most frequent Landmark IDs are displayed in Figure \ref{landmark-ids} whith ID 9633 and ID 6051 being the most frequent ones. Figure \ref{9633} and \ref{6051} show images of the training dataset with these Landmark IDs.
 
+The test dataset holds 117703 URLs to images with the corresponding IDs and will be purely used for validation of the trained model in Assignment 11.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{images/Landmark_ID_occurences}
+	\label{landmark-ids}
+\end{figure}
+	
+\begin{figure}[t]
+	\includegraphics[width=\textwidth]{images/9633}
+	\caption{Image for Landmark\_ID 9633}
+	\label{9633}
+\end{figure}
+	
+\begin{figure}[t]
+	\includegraphics[width=\textwidth]{images/6051}
+	\caption{Image for Landmark\_ID 6051}
+	\label{6051}
+\end{figure}
 
 imbalances, non-normalized features
 
