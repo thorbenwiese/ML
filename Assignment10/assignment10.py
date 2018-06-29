@@ -56,35 +56,6 @@ def readCSVFile(f, train):
   return ids, urls
 
 
-
-# use PILLOW to read images from url
-# Image.open(urllib2.urlopen(url))
-# Image.open(requests.get(url, stream=True).raw)
-
-
-
-def extractFeatures(img):
-  # extract features
-  # are they correlated
-  # cluster features with respect to correlation coefficient
-  # which features are important
-  print 'Features extracted.'
-
-
-def preprocessData(img):
-  # preprocess data
-  # cluster data (or explain why not possible) (maybe cluster only some features)
-  print 'Data preprocessed.'
-
-
-def dimReduction(img):
-  # dimensionality reduction method (e.g. PCA) or CNN Feature Map?
-  print 'Dimensions Reduced.'
-
-
-
-
-
 def main():
 
   train_data = pd.read_csv('./landmark-recog/google-landmarks-dataset/train.csv')
@@ -95,9 +66,6 @@ def main():
   print ''
 
   c = train_data.landmark_id.value_counts()
-
-  print c.keys().tolist()
-  print c.tolist()
 
   temp = pd.DataFrame(train_data.landmark_id.value_counts().head(100))
   temp.reset_index(inplace=True)
@@ -115,15 +83,11 @@ def main():
   print temp
   print ''
 
-  '''
-
   # Plot the most frequent landmark_ids
   plt.figure(figsize = (7, 5))
   plt.title('Landmark_ID Occurences')
   sns.barplot(x="Landmark_ID", y="Occurence", data=temp,
             label="Occurence")
-
-
 
 
   imgPath = '/Volumes/WIESE/landmark-images/train/'
@@ -161,11 +125,7 @@ def main():
         numPixels.append(img.shape[0] * img.shape[1])
 
         full_data.append((imgId, img.shape, img.max(), img.min(), img.max() - img.min(), img.shape[0] * img.shape[1]))
-        # imbalances, non-normalized features
-        #plt.figure()
-        #plt.imshow(img, cmap=plt.cm.gray)
       except:
-        #print 'Image with ID:', imgId, 'could not be read!'
         failed_count *= 1
 
   pt.finish()
@@ -175,7 +135,6 @@ def main():
   for d in full_data:
     print d
     #os.system("echo " + d + " >> output.txt")
-
 
   print '-'*40
   print 'maxVals'
@@ -229,7 +188,6 @@ def main():
   plt.hist(numPixels, bins='auto')
   plt.title('numPixels Hist')
 
-  '''
 
 # execute main
 if __name__ == "__main__":

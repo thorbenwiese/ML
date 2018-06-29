@@ -8,7 +8,7 @@ We chose the Google Landmark Recognition Challenge because we are interested in 
 
 The data provided with the challenge contains mainly of two CSV files. The file for training (train.csv) providing the IDs, URLs and Landmark IDs and the file for testing (test.csv) providing IDs and URLs \cite{data}.
 
-In order to work with the images we wrote a script to scrape all URLs and download the images to our local machine. The script will be provided in the appendix.
+In order to work with the images we wrote a script to scrape all URLs and download the images to our local machine. The script will be attached to this report.
 
 Our approach is to first analyse the data to get a good understanding of it with the help of characteristic numerical values such as value ranges, min or max values and variances, which will be plotted for better visual understanding.
 
@@ -16,11 +16,21 @@ Our approach is to first analyse the data to get a good understanding of it with
 
 Since the data provided with this challenge is contained purely out of images, we will focus on image-related characteristical numerical values for our analysis.
 
-We selected the distribution of landmarks, the dimenions of the images, the amount of pixels, the pixel range (from min to max) and the pixel variance (max - min) to get a better understanding of what the images' shapes are.
+We selected the distribution of landmarks, the dimenions of the images, the amount of pixels, the pixel range (from min to max) and the pixel variance (max - min) to get a better understanding of what the images' shapes are. 
 
-The training dataset holds 1225029 URLs to images and the corresponding IDs and Landmark IDs. The five most frequent Landmark IDs are displayed in Figure \ref{landmark-ids} whith ID 9633 and ID 6051 being the most frequent ones. Figure \ref{9633} and \ref{6051} show images of the training dataset with these Landmark IDs.
+The training dataset holds 1225029 URLs to images and the corresponding IDs and Landmark IDs. The test dataset holds 117703 URLs to images with the corresponding IDs and will be purely used for validation of the trained model in Assignment 11.
 
-The test dataset holds 117703 URLs to images with the corresponding IDs and will be purely used for validation of the trained model in Assignment 11.
+We have selected about 78.000 images of the training set and about 20.000 images of the test set for computation time reasons. The calculation for all the following results can be found in the assignment10.py script attached to this report.
+
+The distribution of the training set Landmarks can be seen in figure \ref{distribution}. The vast majority of landmarks occurs less than 100 times or even once. Only a few occur very frequently. The most frequent landmarks are displayed in figure \ref{landmark-ids} whith ID 9633 and ID 6051 being the most frequent ones. Figure \ref{9633} and \ref{6051} show images of the training dataset with these Landmark IDs.
+
+The variance or pixel range of the images can be seen in figure \ref{variances}. It is clear to see that most images have a variance from 255, which is the full range of a pixel. The Distribution of the maximum pixel value and minimum pixel value can be found in figure \ref{maxVals} and \ref{minVals}. Both show a normal distribution towards 255 for the maximum values and 0 for the minimum values. The total amount of pixels is displayed as a scatter plot in figure \ref{numPixels} and as a histogram in figure \ref{numPixelsHist}.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{images/distribution}
+	\caption{Landmark\_ID Distribution}
+	\label{distribution}
+\end{figure}
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{images/Landmark_ID_occurences}
@@ -40,40 +50,39 @@ The test dataset holds 117703 URLs to images with the corresponding IDs and will
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\textwidth]{images/maxVals}
-	\caption{maxVals}
-	\label{maxVals}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[width=\textwidth]{images/minVals}
-	\caption{minVals}
-	\label{minVals}
-\end{figure}
-
-\begin{figure}
-	\includegraphics[width=\textwidth]{images/variances}
+	\includegraphics[width=\textwidth, height=10.5cm]{images/variances}
 	\caption{Variances}
 	\label{variances}
 \end{figure}
 
 \begin{figure}
-	\includegraphics[width=\textwidth]{images/numPixels}
-	\caption{numPixels}
+	\includegraphics[width=\textwidth, height=10.5cm]{images/maxVals}
+	\caption{Maximum Pixel Values}
+	\label{maxVals}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth, height=10.5cm]{images/minVals}
+	\caption{Minimum Pixel Values}
+	\label{minVals}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth, height=10.5cm]{images/numPixels}
+	\caption{Amount of Pixels Scatter Plot}
 	\label{numPixels}
 \end{figure}
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{images/numPixelsHist}
-	\caption{numPixelsHist}
+	\caption{Amount of Pixels Histogram}
 	\label{numPixelsHist}
 \end{figure}
 
-\begin{figure}
-	\includegraphics[width=\textwidth]{images/distribution}
-	\caption{Landmark\_ID Distribution}
-	\label{distribution}
-\end{figure}
+
+\chapter{Features}
+
+TODO
 
 imbalances, non-normalized features
 
@@ -92,6 +101,9 @@ cluster data (or explain why not possible) (maybe cluster only some features)
 dimensionality reduction method (e.g. PCA) or CNN Feature Map?
 
 \section*{Interesting Features}
-\section*{...}
 
 \chapter{Conclusion}
+
+The dataset is well distributed and well fitting for creating a module that can recognize landmarks in different kinds of images. The images have a various number of shapes and dimensions and are therefore a good basis for a versatile training.
+
+Our analysis showed that a deep learning approach with a convolutional neural network is a fitting choice for this problem due to the amount of data and the difficulty of the task. We will primarily focus on a subset of the provided data for this project in order to keep the calculation time at an appropriate level.
