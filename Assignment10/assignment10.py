@@ -99,8 +99,14 @@ def main():
   print c.keys().tolist()
   print c.tolist()
 
-  plt.figure()
-  plt.hist(c.keys().tolist())
+  temp = pd.DataFrame(train_data.landmark_id.value_counts().head(100))
+  temp.reset_index(inplace=True)
+  temp.columns = ['Landmark_ID','Occurence']
+
+  # Plot the most frequent landmark_ids
+  plt.figure(figsize = (7, 5))
+  sns.barplot(x="Landmark_ID", y="Occurence", data=temp,
+            label="Occurence")
 
   # Occurance of landmark_id in decreasing order(Top categories)
   temp = pd.DataFrame(train_data.landmark_id.value_counts().head(5))
