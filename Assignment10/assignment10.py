@@ -61,9 +61,9 @@ def main():
   train_data = pd.read_csv('./landmark-recog/google-landmarks-dataset/train.csv')
   test_data = pd.read_csv('./landmark-recog/google-landmarks-dataset/test.csv')
 
-  print "Train data size", train_data.shape
-  print "Test data size", test_data.shape
-  print ''
+  print ("Train data size", train_data.shape)
+  print ("Test data size", test_data.shape)
+  print ('')
 
   c = train_data.landmark_id.value_counts()
 
@@ -80,8 +80,8 @@ def main():
   temp = pd.DataFrame(train_data.landmark_id.value_counts().head(5))
   temp.reset_index(inplace=True)
   temp.columns = ['Landmark_ID','Occurence']
-  print temp
-  print ''
+  print( temp)
+  print ('')
 
   # Plot the most frequent landmark_ids
   plt.figure(figsize = (7, 5))
@@ -90,7 +90,9 @@ def main():
             label="Occurence")
 
 
-  imgPath = '/Volumes/WIESE/landmark-images/train/'
+  #imgPath = '/Volumes/WIESE/landmark-images/train/'
+  #imgPath = '/home/marcel/Dokumente/Uni/SOSE18/ML/Übung/u10/data/'
+  imgPath = '/home/marcel/Dokumente/Uni/SOSE18/ML/Übung/u10/min_test_data/'
 
   print('Reading files...\n')
   #index_ids, index_urls = readCSVFile("landmark-recog/google-landmarks-dataset/index.csv", False)
@@ -99,8 +101,8 @@ def main():
   train_ids = [f for f in os.listdir(imgPath) if os.path.isfile(os.path.join(imgPath, f))]
   print('Files Read.\n')
 
-  print 'AMOUNT IMAGES:', len(train_ids)
-  print ''
+  print ('AMOUNT IMAGES:', len(train_ids))
+  print ('')
   
   pt = progress_timer(description='Analyzing Images', n_iter=len(train_ids))
   failed_count = 0
@@ -129,45 +131,45 @@ def main():
         failed_count *= 1
 
   pt.finish()
-  print '\n# Images failed:\n', failed_count
+  print ('\n# Images failed:\n', failed_count)
 
   #os.system('echo "Data" > output.txt')
   for d in full_data:
-    print d
+    print (d)
     #os.system("echo " + d + " >> output.txt")
 
-  print '-'*40
-  print 'maxVals'
-  print 'Mean:', np.mean(maxVals)
-  print 'Max:', np.max(maxVals)
-  print 'Min:', np.min(maxVals)
-  print 'Median:', np.median(maxVals)
-  print '-'*40
-  print ''
-  print '-'*40
-  print 'minVals'
-  print 'Mean:', np.mean(minVals)
-  print 'Max:', np.max(minVals)
-  print 'Min:', np.min(minVals)
-  print 'Median:', np.median(minVals)
-  print '-'*40
-  print ''
-  print '-'*40
-  print 'variances'
-  print 'Mean:', np.mean(variances)
-  print 'Max:', np.max(variances)
-  print 'Min:', np.min(variances)
-  print 'Median:', np.median(variances)
-  print '-'*40
-  print ''
-  print '-'*40
-  print 'numPixels'
-  print 'Mean:', np.mean(numPixels)
-  print 'Max:', np.max(numPixels)
-  print 'Min:', np.min(numPixels)
-  print 'Median:', np.median(numPixels)
-  print '-'*40
-  print ''
+  print ('-'*40)
+  print ('maxVals')
+  print ('Mean:', np.mean(maxVals))
+  print ('Max:', np.max(maxVals))
+  print ('Min:', np.min(maxVals))
+  print ('Median:', np.median(maxVals))
+  print ('-'*40)
+  print ('')
+  print ('-'*40)
+  print ('minVals')
+  print ('Mean:', np.mean(minVals))
+  print ('Max:', np.max(minVals))
+  print ('Min:', np.min(minVals))
+  print ('Median:', np.median(minVals))
+  print ('-'*40)
+  print ('')
+  print ('-'*40)
+  print ('variances')
+  print ('Mean:', np.mean(variances))
+  print ('Max:', np.max(variances))
+  print ('Min:', np.min(variances))
+  print ('Median:', np.median(variances))
+  print ('-'*40)
+  print ('')
+  print ('-'*40)
+  print ('numPixels')
+  print ('Mean:', np.mean(numPixels))
+  print ('Max:', np.max(numPixels))
+  print ('Min:', np.min(numPixels))
+  print ('Median:', np.median(numPixels))
+  print ('-'*40)
+  print ('')
 
   plt.figure()
   plt.scatter(maxVals, range(len(maxVals)))
@@ -193,6 +195,6 @@ def main():
 if __name__ == "__main__":
   start = time.time()
   main()
-  print 'Calculation took:', time.time() - start, 'seconds.'
+  print ('Calculation took:', time.time() - start, 'seconds.')
   plt.show()
 
