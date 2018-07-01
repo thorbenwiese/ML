@@ -113,6 +113,10 @@ We visualize the result of PCA with scatter (mathplotlib), which you can see in 
 
 \section*{Interesting Features}
 
+\section*{Clustering}
+
+The clustering of the image features is a key task in this challenge. We worked out a first approach at feature extraction with the Principal Component Analysis in the previous section trying to extract the most significant features in order to leave out the unsignificant ones. This is a good way of reducing dimensions for both improved simplicity and performance. However, this is also the main task of Assignment 11 and would require too much of next week's work. Our approach is to create a feature map with a deep convolutional neural network and to classify the images with these extracted features.
+
 \chapter{Conclusion}
 
 The dataset is well distributed and well fitting for creating a module that can recognize landmarks in different kinds of images. The images have a various number of shapes and dimensions and are therefore a good basis for a versatile training.
