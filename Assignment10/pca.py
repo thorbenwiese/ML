@@ -30,7 +30,7 @@ principalDf = pd.DataFrame(data = principalComponents
 finalDf = pd.concat([principalDf, df[[target_feature]]], axis = 1)
 
 fig = plt.figure(figsize = (8,8))
-ax = fig.add_subplot(1,1,1) 
+ax = fig.add_subplot(1,2,1) 
 ax.set_xlabel('Principal Component 1', fontsize = 15)  
 ax.set_ylabel('Principal Component 2', fontsize = 15) 
 ax.set_title('2 component PCA', fontsize = 20)
@@ -57,4 +57,22 @@ for target in targets:
 #ax.legend(targets)
 ax.grid()
 print('pca.explained_variance_ratio', pca.explained_variance_ratio_)
+
+ax = fig.add_subplot(1,2,2)
+ax.set_xlabel('Principal Component 1', fontsize = 15)  
+ax.set_ylabel('Principal Component 2', fontsize = 15) 
+ax.set_title('2 component PCA', fontsize = 20)
+targets = [2061, 60,51, 6599, 9633, 9779]
+colors = ['b', 'g', 'r', 'c', 'm', 'y']
+for target, color in zip(targets,colors):
+    indicesToKeep = finalDf[target_feature] == target
+    ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+               , finalDf.loc[indicesToKeep, 'principal component 2']
+               , c = color
+               , s = 50)
+ax.legend(targets, title="most frequent")
+ax.grid()
+
 plt.show()
+
+
