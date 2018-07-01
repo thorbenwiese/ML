@@ -8,9 +8,9 @@ from sklearn.decomposition import PCA
 
 number_of_components = 2 #? TODO plot for n > 2 ?
 
-features = ['shape0','shape1','shape2','max','min','variance','numPixels']#,'landmark_id'] #TODO
-target_feature = 'numPixels' #TODO
-df = pd.read_csv('result_without_landmarks.csv', header = 0)#names=features) #TODO
+features = ['shape0','shape1','shape2','max','min','variance','numPixels'] 
+target_feature = 'landmark_id' 
+df = pd.read_csv('result.csv', header = 0)#names=features #TODO full-data-set
 
 x = df.loc[:, features].values # Separating out the features
 x_nan_indices = np.isnan(x)
@@ -31,11 +31,10 @@ finalDf = pd.concat([principalDf, df[[target_feature]]], axis = 1)
 
 fig = plt.figure(figsize = (8,8))
 ax = fig.add_subplot(1,1,1) 
-ax.set_xlabel('Principal Component 1', fontsize = 15) #TODO 
-ax.set_ylabel('Principal Component 2', fontsize = 15) #TODO
+ax.set_xlabel('Principal Component 1', fontsize = 15)  
+ax.set_ylabel('Principal Component 2', fontsize = 15) 
 ax.set_title('2 component PCA', fontsize = 20)
 
-#targets = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
 targets = np.unique(y)
 
 #colors = ['r', 'g', 'b']
@@ -55,8 +54,7 @@ for target in targets:
                #, c = color
                ,cmap=plt.cm.get_cmap('RdBu')
                , s = 50)
-ax.legend(targets)
+#ax.legend(targets)
 ax.grid()
+print('pca.explained_variance_ratio', pca.explained_variance_ratio_)
 plt.show()
-
-# TODO pca.explained_variance_ratio_

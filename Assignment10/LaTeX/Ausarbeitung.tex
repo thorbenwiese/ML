@@ -13,6 +13,7 @@ In order to work with the images we wrote a script to scrape all URLs and downlo
 Our approach is to first analyse the data to get a good understanding of it with the help of characteristic numerical values such as value ranges, min or max values and variances, which will be plotted for better visual understanding.
 
 \chapter{Data Analysis}
+\label{cha:data}
 
 Since the data provided with this challenge is contained purely out of images, we will focus on image-related characteristical numerical values for our analysis.
 
@@ -82,23 +83,33 @@ The variance or pixel range of the images can be seen in figure \ref{variances}.
 
 \chapter{Features}
 
-TODO
+For feature extraction we do a dimension reduction with PCA. For this - as a first attempt - we defined $['shape0','shape1','shape2','max','min','variance','numPixels']$ as our list x of features. 
+The first three features in the list define the imgage-shape, where shape2 is the channel. The other features are as defined in section \ref{cha:data}. 
+Because PCA is effected by scale we scaled the list x of features in our data with StandardScaler (sklearn)  before applying PCA.  
+After standardization we  defined a number of principial components and project the seven dimension into two dimensions/ principal components. 
+Together these two components contain 77\% of information (result: pca.explained\_ variance\_ ratio [0.39748574 0.37312782]).
+We visualize the result of PCA with scatter (mathplotlib), which you can see in the following figure.  
+\begin{figure}
+	\includegraphics[width=0.7\textwidth]{images/pca}
+\end{figure}
 
-imbalances, non-normalized features
-
-extract features
-
-are they correlated
-
-cluster features with respect to correlation coefficient
-
-which features are important
-
-preprocess data
-
-cluster data (or explain why not possible) (maybe cluster only some features)
-
-dimensionality reduction method (e.g. PCA) or CNN Feature Map?
+%TODO
+%
+%imbalances, non-normalized features
+%
+%extract features
+%
+%are they correlated
+%
+%cluster features with respect to correlation coefficient
+%
+%which features are important
+%
+%preprocess data
+%
+%cluster data (or explain why not possible) (maybe cluster only some features)
+%
+%dimensionality reduction method (e.g. PCA) or CNN Feature Map?
 
 \section*{Interesting Features}
 
