@@ -83,41 +83,35 @@ The variance or pixel range of the images can be seen in figure \ref{variances}.
 
 \chapter{Features}
 
-For feature extraction we do a dimension reduction with PCA. For this - as a first attempt - we defined $['shape0','shape1','shape2','max','min','variance','numPixels']$ as our list x of features. 
-The first three features in the list define the imgage-shape, where shape2 is the channel. The other features are as defined in section \ref{cha:data}. 
-Because PCA is effected by scale we scaled the list x of features in our data with StandardScaler (sklearn)  before applying PCA.  
-After standardization we  defined a number of principial components and project the seven dimension into two dimensions/ principal components. 
+\section{Dimension Reduction}
+For the feature extraction we did a dimension reduction with Principal Component Analysis (PCA). For this first attempt we defined 
+\[x = [shape0, shape1, shape2, max, min, variance, numPixels]\]
+as our list x of features.
+
+The first three features in the list define the imgage shape, where shape2 is the channel. The other features are as defined in section \ref{cha:data}. 
+Because PCA is affected by scale we scaled the list x of features in our data with StandardScaler (sklearn) before applying PCA.
+
+After standardization we defined a number of principial components and project the seven dimension into two dimensions / principal components. 
 Together these two components contain 77\% of information (result: pca.explained\_ variance\_ ratio [0.39748574 0.37312782]).
-We visualize the result of PCA with scatter (mathplotlib), which you can see in the following figure.  
+
+We visualize the result of PCA with scatter (mathplotlib), which you can see in figure \ref{pca}. The most frequent landmarks can be seen in figure \ref{pca2}.
 \begin{figure}
-	\includegraphics[width=0.7\textwidth]{images/pca}
+	\centering
+	\includegraphics[width=0.7\textwidth, height=10.5cm]{images/pca}
+	\label{pca}
+	\caption{PCA result}
 \end{figure}
 
-The second figure take a look at the most frequent occurred landmarks.
 \begin{figure}
-	\includegraphics[width=0.7\textwidth]{images/pca2}
+	\centering
+	\includegraphics[width=0.7\textwidth, height=10.5cm]{images/pca2}
+	\label{pca2}
+	\caption{Most frequent landmarks from PCA}
 \end{figure}
 
+\section{Clustering}
 
-%TODO
-%
-%imbalances, non-normalized features
-%
-%extract features
-%
-%are they correlated
-%
-%cluster features with respect to correlation coefficient
-%
-%which features are important
-%
-%preprocess data
-%
-%cluster data (or explain why not possible) (maybe cluster only some features)
-%
-%dimensionality reduction method (e.g. PCA) or CNN Feature Map?
-
-\section*{Interesting Features}
+The clustering of the image features is a key task in this challenge. We worked out a first approach at feature extraction with the Principal Component Analysis in the previous section trying to extract the most significant features in order to leave out the unsignificant ones. This is a good way of reducing dimensions for both improved simplicity and performance. However, this is also the main task of Assignment 11 and would require too much of next week's work. Our approach is to create a feature map with a deep convolutional neural network and to classify the images with these extracted features.
 
 \chapter{Conclusion}
 
