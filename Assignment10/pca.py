@@ -4,18 +4,16 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-#Quelle: https://towardsdatascience.com/pca-using-python-scikit-learn-e653f8989e60
-
-number_of_components = 2 #? TODO plot for n > 2 ?
+number_of_components = 2
 
 features = ['shape0','shape1','shape2','max','min','variance','numPixels'] 
 target_feature = 'landmark_id' 
-df = pd.read_csv('result.csv', header = 0)#names=features #TODO full-data-set
+df = pd.read_csv('result.csv', header = 0)
 
 x = df.loc[:, features].values # Separating out the features
 x_nan_indices = np.isnan(x)
 x = x[~x_nan_indices.any(axis=1)] #remove rows where x contain nan
-y = df.loc[:,[target_feature]].values # Separating out the target #TODO -> landmark_id
+y = df.loc[:,[target_feature]].values # Separating out the target -> landmark_id
 y = y[~x_nan_indices.any(axis=1)] #remove rows where x contain nan
 
 x = StandardScaler().fit_transform(x) # Standardizing the features
