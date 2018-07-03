@@ -9,6 +9,7 @@ import cv2
 import os
 import imageio
 import csv
+import matplotlib.pyplot as plt
 
 '''
 def image_to_feature_vector(image, size=(32, 32)):
@@ -50,18 +51,24 @@ imgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selected
 
 train_ids = [f.replace('.jpg','') for f in os.listdir(imgPath) if os.path.isfile(os.path.join(imgPath,     f))]
 
-imgVectors = [['id','featureVector']]
 count = 0
 
-for imgId in train_ids:
-  print 'Run', count
-  count += 1
-  try:
-    img = imageio.imread(imgPath + imgId + '.jpg')
-    imgVectors.append([imgId, extract_features(img)])
-  except:
-    print 'COULD NOT READ IMAGE WITH ID:', imgId
-
-with open("result.csv", "w") as f:
+thresh = 500
+plt.figure()
+with open("result2.csv", "w") as f:
   writer = csv.writer(f)
-  writer.writerows(imgVectors)
+  for imgId in train_ids:
+    if count == 0:
+      writer.writerow(['id','featureVector'])
+    if thresh > 0:
+      thresh -= 1
+      print 'Run', count
+      count += 1
+      try:
+        img = imageio.imread(imgPath + imgId + '.jpg')
+        features = extract_features(img)
+        plt.plot(features)
+        writer.writerow((imgId, [f for f in features]))
+      except:
+        print 'COULD NOT READ IMAGE WITH ID:', imgId
+plt.show()
