@@ -40,17 +40,21 @@ with open('google-landmarks-dataset/train.csv', mode='r') as infile:
     key, value = rows[0], rows[2]
     id_mapping[key] = value
 
-
 imgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImages/'
 
+testImgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImagesTest/'
+
 train_ids = [f.replace('.jpg','') for f in os.listdir(imgPath) if os.path.isfile(os.path.join(imgPath,     f))]
+
+test_ids = [f.replace('.jpg','') for f in os.listdir(testImgPath) if os.path.isfile(os.path.join(testImgPath,     f))]
 
 count = 0
 
 # thresh can be used to only select a couple of images
 thresh = 500
 
-with open("result.csv", "w") as f:
+# WRITE TRAIN RESULT
+with open("resultTRAIN.csv", "w") as f:
   writer = csv.writer(f)
   for imgId in train_ids:
     if count == 0:
@@ -65,3 +69,21 @@ with open("result.csv", "w") as f:
         writer.writerow((imgId, [f for f in features], id_mapping[imgId]))
       except:
         print 'COULD NOT READ IMAGE WITH ID:', imgId
+
+# WRITE TEST RESULT
+with open("resultTEST.csv", "w") as f:
+  writer = csv.writer(f)
+  for imgId in test_ids:
+    if count == 0:
+      writer.writerow(['id','featureVector'])
+    if thresh > 0:
+      thresh -= 1
+      print 'Run', count
+      count += 1
+      try:
+        img = imageio.imread(testImgPath + imgId + '.jpg')
+        features = extract_features(img)
+        writer.writerow((imgId, [f for f in features]))
+      except:
+        print 'COULD NOT READ IMAGE WITH ID:', imgId
+
