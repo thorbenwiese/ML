@@ -3,7 +3,7 @@
 import csv
 import matplotlib.pyplot as plt
 
-def readCSV):
+def readCSV():
     ids = []
     vectors = []
     with open('result.csv', 'rU') as data:
