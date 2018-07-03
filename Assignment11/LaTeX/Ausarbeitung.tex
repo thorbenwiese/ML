@@ -20,7 +20,7 @@ where:\\
 	\item $N$ is the total number of predictions returned by the system, across all queries
 	\item $M$ is the total number of queries with at least one landmark from the training set visible in it
 	\item $P(i)$ is the precision at rank $i$
-	\item $rel(i)$ denotes the relevance of prediction $i$: it's 1 if the $i$-th prediction is coreect, and 0 otherwise
+	\item $rel(i)$ denotes the relevance of prediction $i$: it's 1 if the $i$-th prediction is correct, and 0 otherwise
 \end{itemize}
 
 \chapter{Predictive Modeling Steps}
@@ -49,7 +49,9 @@ One very well known method for classification is the Support Vector Machine (SVM
 
 \section{Logistic Regression}
 
-The Logistic Regression is a special form of regression using a parameter alpha to ...
+The Logistic Regression is a special form of regression using the logistic loss as the loss function explained in \cite{logistic-loss}
+
+\[\ell(X, f(X), Y) = \log_2(1 + exp(-Y f(X))).\]
 
 \chapter{Results}\label{results}
 
