@@ -3,7 +3,7 @@
 import csv
 
 def getNmostIDs(file, n):
-    print 'number of rows in {}:'.format(file), len(open(file).readlines())
+    print ('number of rows in {}:'.format(file), len(open(file).readlines()))
     with open(file, mode='r') as infile:
         reader = csv.reader(infile)
         mydict = {}
@@ -21,6 +21,6 @@ def getNmostIDs(file, n):
     selectedIds = []
 
     for i in range(n):
-        print 'landmark_id', sorted_x[i][0], 'occurs', len(sorted_x[i][1]), ' times'
+        print ('landmark_id', sorted_x[i][0], 'occurs', len(sorted_x[i][1]), ' times')
         selectedIds.append(sorted_x[i][0])
     return selectedIds

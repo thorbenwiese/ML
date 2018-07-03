@@ -46,7 +46,8 @@ def extract_features(image, vector_size=32):
 
     return dsc
 
-imgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImages/'
+#imgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImages/'
+imgPath = '/home/marcel/Dokumente/Uni/SOSE18/ML/Übung/u11/data/'
 
 train_ids = [f.replace('.jpg','') for f in os.listdir(imgPath) if os.path.isfile(os.path.join(imgPath,     f))]
 
