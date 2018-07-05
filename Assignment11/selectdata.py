@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import csv
+
 
 def getNmostIDs(file, n):
     print ('number of rows in {}:'.format(file), len(open(file).readlines()))
@@ -8,8 +7,8 @@ def getNmostIDs(file, n):
         reader = csv.reader(infile)
         mydict = {}
         for rows in reader:
-            key, value = rows[2],(rows[0], rows[1])
-            if key not in mydict :
+            key, value = rows[2], (rows[0], rows[1])
+            if key not in mydict:
                 mydict[key] = [value]
             elif type(mydict[key]) == list:
                 mydict.get(key).append(value)
@@ -22,5 +21,6 @@ def getNmostIDs(file, n):
 
     for i in range(n):
         print ('landmark_id', sorted_x[i][0], 'occurs', len(sorted_x[i][1]), ' times')
-        selectedIds.append(sorted_x[i][0])
+        selectedIds.append((sorted_x[i][0], len(sorted_x[i][1])))
+
     return selectedIds
