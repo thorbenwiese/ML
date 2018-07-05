@@ -12,6 +12,8 @@ import csv
 import downloadImages
 import shutil
 from sklearn.cross_validation import train_test_split
+import multiprocessing as mp
+import time
 
 
 #trainImgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImages/'
@@ -20,9 +22,12 @@ trainImgPath = 'train/'
 testImgPath = 'test/'
 traincsv = 'google-landmarks-dataset/train.csv'
 dataPath = 'data/'
-number_of_img = 500
+number_of_img = 2000
+thresh = number_of_img # thresh can be used to only select a couple of images -> reduce number-of_images for debugging
 n_most_landmarks=7
-testsize = 0.15
+testsize = 0.25
+
+
 
 
 '''
@@ -88,8 +93,73 @@ prepareData()
 train_ids = [f.replace('.jpg','') for f in os.listdir(trainImgPath) if os.path.isfile(os.path.join(trainImgPath,     f))]
 test_ids = [f.replace('.jpg','') for f in os.listdir(testImgPath) if os.path.isfile(os.path.join(testImgPath,     f))]
 
-count = 0
 
+
+# Quelle multiprocessing: https://stackoverflow.com/questions/13446445/python-multiprocessing-safely-writing-to-a-file
+def worker(imgId, q):
+    print(imgId, 'started')
+    start = time.clock()
+    try:
+        img = imageio.imread(trainImgPath + imgId + '.jpg')
+        features = extract_features(img)
+        q.put((imgId, [f for f in features], id_mapping[imgId]))
+        success = 'success'
+    except:
+        success = 'failed'
+    done = time.clock() - start
+    res = 'Process for ImageID:' + str(imgId), success, 'done in: ',done#, 'counter: ', count
+    print(res)
+    return res
+
+def listener(q):
+    count = 0
+    try:
+        f = open("resultTRAIN.csv", 'w')
+        wr = csv.writer(f)
+        wr.writerow(['id', 'featureVector', 'landmark_id'])
+        while 1:
+            m = q.get()
+            if m == 'kill':
+                print('kill listener')
+                break
+            if count % 5 == 0:
+                print(20*'=', count, ' / ', thresh, '  --> ',count/thresh, '% done ', 20*'=')
+            count += 1
+            wr.writerow(m)
+    except:
+        print('writer failed')
+
+# must use Manager queue here, or will not work
+manager = mp.Manager()
+q = manager.Queue()
+pool = mp.Pool(processes=4)
+
+# put listener to work first
+watcher = pool.apply_async(listener, (q,))
+
+# fire off workers
+jobs = []
+for imgId in train_ids:
+    if thresh > 0:
+        thresh -= 1
+        job = pool.apply_async(worker, (imgId, q))
+        jobs.append(job)
+
+# collect results from the workers through the pool result queue
+for job in jobs:
+    job.get()
+
+# now we are done, kill the listener
+q.put('kill')
+pool.close()
+pool.join()
+
+
+
+
+
+'''
+count = 0
 # thresh can be used to only select a couple of images
 thresh = 500
 
@@ -126,4 +196,5 @@ with open("resultTEST.csv", "w") as f:
         writer.writerow((imgId, [f for f in features]))
       except:
         print ('COULD NOT READ IMAGE WITH ID:', imgId)
+'''
 
