@@ -13,6 +13,7 @@ def download(dataPath, traincsv ,n_most, count):
     with open(traincsv) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         landmarks_occ = getNmostIDs(traincsv, n_most)
+        landmarks_occ = [x for x in landmarks_occ if 'None' not in x]
         landmarks = list(map(int, [x[0] for x in landmarks_occ]))
         occ = list(map(int, [x[1] for x in landmarks_occ]))
         analysis = {}

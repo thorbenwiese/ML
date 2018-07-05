@@ -22,9 +22,9 @@ trainImgPath = 'train/'
 testImgPath = 'test/'
 traincsv = 'google-landmarks-dataset/train.csv'
 dataPath = 'data/'
-number_of_img = 2000
+number_of_img = 50000
 thresh = number_of_img # thresh can be used to only select a couple of images -> reduce number-of_images for debugging
-n_most_landmarks=7
+n_most_landmarks=20
 testsize = 0.25
 
 
