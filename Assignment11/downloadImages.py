@@ -6,6 +6,9 @@ import csv
 import os
 from tabulate import tabulate
 
+
+'''This script reads a csv which contain tupels of form (id, link, landmark) and  downloads a specified number (count) of images of the n most occurencing landmarks'''
+
 def download(dataPath, traincsv ,n_most, count):
     if(not download_preconditions(dataPath, traincsv)):
         print('precondition error')
@@ -35,7 +38,9 @@ def download(dataPath, traincsv ,n_most, count):
 
     print ('number of rows in {}:'.format(traincsv), len(open(traincsv).readlines()))
     table = [(landmarks[i], occ[i], analysis[landmarks[i]]) for i in range(len(landmarks))]
-    print (tabulate(table, headers=['landmark', 'occurence', 'downloaded']))
+    output_table = tabulate(table, headers=['landmark', 'occurence', 'downloaded'])
+    print (output_table)
+    open('download_statistik', 'w').write(output_table)
 
 def getNmostIDs(file, n):
     print ('number of rows in {}:'.format(file), len(open(file).readlines()))

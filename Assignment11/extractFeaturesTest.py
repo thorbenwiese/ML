@@ -1,52 +1,29 @@
 # import the necessary packages
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
-from imutils import paths
 import numpy as np
-import argparse
-import imutils
 import cv2
 import os
 import imageio
 import csv
-import downloadImages
-import shutil
-from sklearn.cross_validation import train_test_split
 import multiprocessing as mp
 import time
 
+
 '''
-This script extracts feature vectors for a given train- and test-set (folders) by using multiprocessing (for reasons of
-performance). The feature vectors are stored in csv-files. If there don't exist sets, this script starts the
-downloadImage-script an split the result into train- and test-set
-
-Caution! Actually the feature-extraction for test-sets seems not to work, please use extractFeaturesTest.py for this.
+Pricipially this script does the same as extractFeatures.py (extract feature-vectors to csv) with the difference that
+ the feature extraction for train-sets and the data-preparation were removed. As soon as the broken feature extraction
+ for test-sets (in extractFeatures.py) is fixed this script may be removed.
 '''
 
 
-#trainImgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImages/'
-#testImgPath = '/Users/wiese/Documents/UHH/Master/4.Semester/ML/Assignment11/selectedImagesTest/'
-trainImgPath = 'train/'
+#trainImgPath = 'train/'
 testImgPath = 'test/'
 traincsv = 'google-landmarks-dataset/train.csv'
 dataPath = 'data/'
-number_of_img = 20000
-thresh = number_of_img # thresh can be used to only select a couple of images -> reduce number-of_images for debugging
-n_most_landmarks=7
-testsize = 0.25
+thresh = len(os.listdir(testImgPath)) # In difference to extractFeature.py in this script thresh isn't a threshold but the number of all images in testimage-folder
 count = 0 # ignore this -> just a counter for monitoring progress
 
 g_start = time.time()
 
-
-
-
-'''
-def image_to_feature_vector(image, size=(32, 32)):
-	# resize the image to a fixed size, then flatten the image into
-	# a list of raw pixel intensities
-	return cv2.resize(image, size).flatten()
-'''
 
 # Feature extractor
 def extract_features(image, vector_size=32):
@@ -56,7 +33,7 @@ def extract_features(image, vector_size=32):
         alg = cv2.KAZE_create()
         # Dinding image keypoints
         kps = alg.detect(image)
-        # Getting first 32 of them. 
+        # Getting first 32 of them.
         # Number of keypoints is varies depend on image size and color pallet
         # Sorting them based on keypoint response value(bigger is better)
         kps = sorted(kps, key=lambda x: -x.response)[:vector_size]
@@ -77,21 +54,6 @@ def extract_features(image, vector_size=32):
 
     return dsc
 
-def prepareData():
-    if not (os.path.exists(trainImgPath) or os.path.exists(testImgPath)):
-        os.makedirs(trainImgPath)
-        os.makedirs(testImgPath)
-    if not (len(os.listdir(trainImgPath)) > 0 and len(os.listdir(testImgPath))):
-        if not os.path.exists(dataPath):
-            os.makedirs(dataPath)
-        if not len(os.listdir(dataPath)) > 0:
-            downloadImages.download(dataPath, traincsv, n_most_landmarks, number_of_img)
-        data = os.listdir(dataPath)
-        data = np.array(data)
-        x_train, x_test = train_test_split(data, test_size=testsize)
-        for x in x_train: shutil.move(os.path.join(dataPath, x), trainImgPath)
-        for x in x_test: shutil.move(os.path.join(dataPath, x), testImgPath)
-
 id_mapping = {}
 with open(traincsv, mode='r') as infile:
   reader = csv.reader(infile)
@@ -99,13 +61,8 @@ with open(traincsv, mode='r') as infile:
     key, value = rows[0], rows[2]
     id_mapping[key] = value
 
-prepareData()
-print('time for data preparation: ', time.time() - g_start)
-
-train_ids = [f.replace('.jpg','') for f in os.listdir(trainImgPath) if os.path.isfile(os.path.join(trainImgPath,     f))]
+#train_ids = [f.replace('.jpg','') for f in os.listdir(trainImgPath) if os.path.isfile(os.path.join(trainImgPath,     f))]
 test_ids = [f.replace('.jpg','') for f in os.listdir(testImgPath) if os.path.isfile(os.path.join(testImgPath,     f))]
-
-
 
 # Quelle multiprocessing: https://stackoverflow.com/questions/13446445/python-multiprocessing-safely-writing-to-a-file
 def worker(imgId, path, q):
@@ -144,35 +101,7 @@ def listener(l_csv, q):
         print('writer failed')
 
 
-#create feature vectors for trai
-# must use Manager queue here, or will not work
-manager = mp.Manager()
-q = manager.Queue()
-pool = mp.Pool(processes=4)
-
-# put listener to work first
-watcher = pool.apply_async(listener, ("resultTRAIN.csv", q,))
-
-# fire off workers
-jobs = []
-for imgId in train_ids:
-    if thresh > 0:
-        thresh -= 1
-        job = pool.apply_async(worker, (imgId, trainImgPath, q))
-        jobs.append(job)
-
-# collect results from the workers through the pool result queue
-for job in jobs:
-    job.get()
-
-# now we are done, kill the listener
-q.put('kill')
-pool.close()
-pool.join()
-
-time.sleep(5)
-
-#create feature vectors for test
+#create feature vectors for test'
 # must use Manager queue here, or will not work
 manager = mp.Manager()
 q = manager.Queue()
@@ -197,5 +126,3 @@ for job in jobs:
 q.put('kill')
 pool.close()
 pool.join()
-
-print('time over all: ', time.time() - g_start)
