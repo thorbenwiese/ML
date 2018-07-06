@@ -1,0 +1,10 @@
+number of rows in google-landmarks-dataset/train.csv: 1225030
+  landmark    occurence    downloaded
+----------  -----------  ------------
+      9633        50010           523
+      6051        49806           574
+      6599        23218           295
+      9779        18309           219
+      2061        13183           150
+      5554        11033           116
+      6651         9444           123
