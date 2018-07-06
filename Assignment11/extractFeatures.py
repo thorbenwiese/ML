@@ -135,9 +135,7 @@ def listener(l_csv, q):
                 print('kill listener')
                 break
             if count % 5 == 0:
-                print(20*'=', count, ' / ', thresh, '  --> ',count*100/thresh, '% done ', 20*'=')
-            if count % 10 == 0:
-                print('time since start: ', time.time() - g_start)
+                print(20*'=', count, ' / ', thresh, '  --> ',count/thresh, '% done ', 20*'=')
             count += 1
             wr.writerow(m)
     except:
