@@ -24,16 +24,14 @@ where:\\
 \end{itemize}
 
 \chapter{Predictive Modeling Steps}
-
-Image to feature vector (feature extraction)
-
-Normalization
+We used opencv-python 3.4.1.15 to extract feature vectors. The procedure is as following: We detect image keypoints, where the number of keypoints is varies depend on image size and color pallet. Than they were sorted based on keypoint response value(bigger is better). The results of this are used to compute a descriptors vectors. Flatten all of them in one big vector generates our feature vector. The descriptors are normalized to a size of 64. If we have less the 32 descriptors then just adding zeros at the end of our feature vector   
+Image to feature vector (feature extraction).
 
 \chapter{Training and Test Data}
 
 We chose to create a subset of the original training data for computation time and performance reasons. The original training data has about 1.2 million images which takes too long to process for a one week assignment. We therefore selected the seven most relevant Landmark IDs according to our PCA analysis (IDs: 9633, 6051, 6599, 9779, 2061, 5554, 6651) and chose 2000 images containing those IDs for our training data. The script for downloading this data is attached to this report (download-images.py).
 
-The test data will be chosen accordingly with a size of approximately 1000 images.
+The test data will be chosen accordingly with a size of approximately 25\% of all images.
 
 For reasons of debugging and comparsion we also created a data-set with 200 images. Furthermore we created a data-set with 20000 images to test the performance.  
 
@@ -56,8 +54,28 @@ The Logistic Regression is a special form of regression using the logistic loss 
 \[\ell(X, f(X), Y) = \log_2(1 + exp(-Y f(X))).\]
 
 \chapter{Results}\label{results}
+First of all the size of our dataset was very challenging. We got a lot of performance and memory problems, so we limited ourself to 2000 images and comparatively simple approaches. For example: We tried to work with a 20000 image set. The feature extraction for this set  took longer than one day and executing knn failed with memory exceptions (8gb RAM was not enough).
 
-Plots
+The following figure shows the accuracy (in percentage) and time (in seconds) for knn with different ks. 
+\begin{figure}[!htb]
+	\includegraphics[width=0.85\textwidth]{images/knn}
+	\caption{knn for 200 and 2000 images}
+\end{figure}
+You can see that an increasing k performs better (up to a certain limit). Time usage seems to be not affected by k up to a value of k = 50. 
+
+The second and third figures shows different SVM configurations (kernel, gamma, c). Red and yellow shows $1 - error$, the time is normalized to maximum time usage (0.218 seconds for 200 imgages, 22.318 seconds for 2000 images)
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{images/svm200}
+	\caption{SVM for 200 images}
+\end{figure}
+
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{images/svm2000}
+	\caption{SVM for 2000 images}
+\end{figure}
+
+Different SVM configurations affects primarily the usage of time. The quality of the model varies by about 5-10\% (1 - test error).
+
 
 \chapter{Method Comparison}
 
