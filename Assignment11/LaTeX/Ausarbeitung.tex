@@ -74,17 +74,32 @@ The second and third figures shows different SVM configurations (kernel, gamma, 
 	\caption{SVM for 2000 images}
 \end{figure}
 
-Different SVM configurations affects primarily the usage of time. The quality of the model varies by about 5-10\% (1 - test error).
+Different SVM configurations affects primarily the usage of time. The quality of the model varies by about 5-10\% (1 - test error).\\
+
+\newpage
+For Logistic Regression we tested as for SVM different configurations (solver, c). The last two figures show our results.
+
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{images/logistic200}
+	\caption{Logistic regression for 200 images}
+\end{figure}
+
+\begin{figure}[!htb]
+	\includegraphics[width=\textwidth]{images/logistic2000}
+	\caption{Logistic regression for 2000 images}
+\end{figure}
+
+For logistic regression the time is normalized to the maximal time usage (1.543 seconds for 200 images, 16.180 seconds for 2000 images).
 
 
 \chapter{Method Comparison}
 
-The results shown in chapter \ref{results} show that ...
+The results shown in chapter \ref{results} show that the accuracy of all approaches are quite bad for 200 or 2000 images. Im most cases there is a small improvement from 200 to 2000 images, so we can hope to achieve further improvements with larger image sets. The problem of these is, that larger sets increase time and memory usage. In all approaches the accuracy varies between 20 and 40\% (random classification, would be 100 percent/ 7 classes = 14\%), most of them nearby 35\%, but the usage of time depends heavily at configuration. Particulary the logistic regression annd the svm approach seems to have solvers/kernels which are unsuitable for our task. The worst configurations need 22 (or 16) while the worst configuration for knn only needs 6 seconds. On the other hand both approaches have configurations which are faster than knn (2-3 seconds time usage). It would be interessting how these configurations would perform with 20000 imgages in comparison to knn.
 
 \chapter{Conclusion}
 
 We introduced three well-known methods for image classification in this project and compared their results for solving the Google Landmark Recognition Challenge.
 
-The results are ...
+The results are restricted due to the limitations of RAM. In all approaches there are a prediction precisions near by 35\%. While success seems to be not to depentent from configuration the usage of time is strongly dependent by the configuration.
 
 However, a deep convolutional neural network with a much longer training time is probably the best choice for approaching a task like this.
