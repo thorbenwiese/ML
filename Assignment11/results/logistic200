@@ -1,0 +1,54 @@
+/usr/bin/python3.5 /home/marcel/eclipse-workspace/ML/Assignment11/logistic.py
+ITERATION 200
+iteration:  200 c:  0.1  kernel:  newton-cg  train: 0.3087248322147651
+iteration:  200 c:  0.1  kernel:  newton-cg  test: 0.6326530612244898
+iteration:  200 c:  0.5  kernel:  newton-cg  train: 0.0
+iteration:  200 c:  0.5  kernel:  newton-cg  test: 0.7346938775510203
+iteration:  200 c:  1  kernel:  newton-cg  train: 0.0
+iteration:  200 c:  1  kernel:  newton-cg  test: 0.7346938775510203
+iteration:  200 c:  10  kernel:  newton-cg  train: 0.0
+iteration:  200 c:  10  kernel:  newton-cg  test: 0.7551020408163265
+iteration:  200 c:  0.1  kernel:  lbfgs  train: 0.3087248322147651
+iteration:  200 c:  0.1  kernel:  lbfgs  test: 0.6326530612244898
+iteration:  200 c:  0.5  kernel:  lbfgs  train: 0.0
+iteration:  200 c:  0.5  kernel:  lbfgs  test: 0.7346938775510203
+iteration:  200 c:  1  kernel:  lbfgs  train: 0.0
+iteration:  200 c:  1  kernel:  lbfgs  test: 0.7346938775510203
+iteration:  200 c:  10  kernel:  lbfgs  train: 0.0
+iteration:  200 c:  10  kernel:  lbfgs  test: 0.7551020408163265
+iteration:  200 c:  0.1  kernel:  liblinear  train: 0.30201342281879195
+iteration:  200 c:  0.1  kernel:  liblinear  test: 0.6326530612244898
+iteration:  200 c:  0.5  kernel:  liblinear  train: 0.0
+iteration:  200 c:  0.5  kernel:  liblinear  test: 0.7346938775510203
+iteration:  200 c:  1  kernel:  liblinear  train: 0.0
+iteration:  200 c:  1  kernel:  liblinear  test: 0.7346938775510203
+iteration:  200 c:  10  kernel:  liblinear  train: 0.0
+iteration:  200 c:  10  kernel:  liblinear  test: 0.7551020408163265
+/usr/local/lib/python3.5/dist-packages/sklearn/linear_model/sag.py:326: ConvergenceWarning: The max_iter was reached which means the coef_ did not converge
+  "the coef_ did not converge", ConvergenceWarning)
+iteration:  200 c:  0.1  kernel:  sag  train: 0.3087248322147651
+iteration:  200 c:  0.1  kernel:  sag  test: 0.6326530612244898
+iteration:  200 c:  0.5  kernel:  sag  train: 0.0
+iteration:  200 c:  0.5  kernel:  sag  test: 0.7346938775510203
+iteration:  200 c:  1  kernel:  sag  train: 0.0
+iteration:  200 c:  1  kernel:  sag  test: 0.7346938775510203
+iteration:  200 c:  10  kernel:  sag  train: 0.0
+iteration:  200 c:  10  kernel:  sag  test: 0.7551020408163265
+iteration:  200 c:  0.1  kernel:  saga  train: 0.3087248322147651
+iteration:  200 c:  0.1  kernel:  saga  test: 0.6326530612244898
+iteration:  200 c:  0.5  kernel:  saga  train: 0.0
+iteration:  200 c:  0.5  kernel:  saga  test: 0.7346938775510203
+iteration:  200 c:  1  kernel:  saga  train: 0.0
+iteration:  200 c:  1  kernel:  saga  test: 0.7346938775510203
+iteration:  200 c:  10  kernel:  saga  train: 0.0
+iteration:  200 c:  10  kernel:  saga  test: 0.7551020408163265
+
+
+==============================
+
+
+[[(('newton-cg', 0.1), (0.6912751677852349, 0.36734693877551017, 0.17981767654418945)), (('newton-cg', 0.5), (1.0, 0.26530612244897966, 0.37943506240844727)), (('newton-cg', 1), (1.0, 0.26530612244897966, 0.39799022674560547)), (('newton-cg', 10), (1.0, 0.24489795918367352, 0.3808119297027588)), (('lbfgs', 0.1), (0.6912751677852349, 0.36734693877551017, 0.13622832298278809)), (('lbfgs', 0.5), (1.0, 0.26530612244897966, 0.1515793800354004)), (('lbfgs', 1), (1.0, 0.26530612244897966, 0.19484496116638184)), (('lbfgs', 10), (1.0, 0.24489795918367352, 0.22278618812561035)), (('liblinear', 0.1), (0.697986577181208, 0.36734693877551017, 0.13413691520690918)), (('liblinear', 0.5), (1.0, 0.26530612244897966, 0.15710115432739258)), (('liblinear', 1), (1.0, 0.26530612244897966, 0.1604783535003662)), (('liblinear', 10), (1.0, 0.24489795918367352, 0.21949982643127441)), (('sag', 0.1), (0.6912751677852349, 0.36734693877551017, 1.0899288654327393)), (('sag', 0.5), (1.0, 0.26530612244897966, 1.2599260807037354)), (('sag', 1), (1.0, 0.26530612244897966, 1.1862974166870117)), (('sag', 10), (1.0, 0.24489795918367352, 1.2895078659057617)), (('saga', 0.1), (0.6912751677852349, 0.36734693877551017, 1.5376169681549072)), (('saga', 0.5), (1.0, 0.26530612244897966, 1.451369285583496)), (('saga', 1), (1.0, 0.26530612244897966, 1.4674983024597168)), (('saga', 10), (1.0, 0.24489795918367352, 1.5436255931854248))]]
+maxtime:  1.5436255931854248
+[[(('newton-cg', 0.1), (0.6912751677852349, 0.36734693877551017, 0.17981767654418945)), (('newton-cg', 0.5), (1.0, 0.26530612244897966, 0.37943506240844727)), (('newton-cg', 1), (1.0, 0.26530612244897966, 0.39799022674560547)), (('newton-cg', 10), (1.0, 0.24489795918367352, 0.3808119297027588)), (('lbfgs', 0.1), (0.6912751677852349, 0.36734693877551017, 0.13622832298278809)), (('lbfgs', 0.5), (1.0, 0.26530612244897966, 0.1515793800354004)), (('lbfgs', 1), (1.0, 0.26530612244897966, 0.19484496116638184)), (('lbfgs', 10), (1.0, 0.24489795918367352, 0.22278618812561035)), (('liblinear', 0.1), (0.697986577181208, 0.36734693877551017, 0.13413691520690918)), (('liblinear', 0.5), (1.0, 0.26530612244897966, 0.15710115432739258)), (('liblinear', 1), (1.0, 0.26530612244897966, 0.1604783535003662)), (('liblinear', 10), (1.0, 0.24489795918367352, 0.21949982643127441)), (('sag', 0.1), (0.6912751677852349, 0.36734693877551017, 1.0899288654327393)), (('sag', 0.5), (1.0, 0.26530612244897966, 1.2599260807037354)), (('sag', 1), (1.0, 0.26530612244897966, 1.1862974166870117)), (('sag', 10), (1.0, 0.24489795918367352, 1.2895078659057617)), (('saga', 0.1), (0.6912751677852349, 0.36734693877551017, 1.5376169681549072)), (('saga', 0.5), (1.0, 0.26530612244897966, 1.451369285583496)), (('saga', 1), (1.0, 0.26530612244897966, 1.4674983024597168)), (('saga', 10), (1.0, 0.24489795918367352, 1.5436255931854248))]]
+
+Process finished with exit code 0

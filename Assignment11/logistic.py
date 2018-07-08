@@ -84,5 +84,5 @@ def logistic_regression(iterations):
     print(result)
     plt.show()
 
-logistic_regression([200])
-#logistic_regression([2000])
+#logistic_regression([200])
+logistic_regression([2000])
