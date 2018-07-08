@@ -1,0 +1,3 @@
+For analysis you need some csv-files which are to large for git/mail.
+You can find them at http://norderdeich58.ddns.net/daten/uni/featurevectors/.
+Alternatively you can generate them with extractFeatures.py and extractFeaturesTest.py (rename files to resultTEST<iteration>.csv and resultTRAIN<iteration>.csv)

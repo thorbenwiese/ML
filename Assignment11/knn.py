@@ -5,6 +5,11 @@ import time
 import sys
 from sklearn.neighbors import KNeighborsClassifier
 
+'''
+This script execute knn on csv-data.
+Caution: Especially for resultTRAIN20000 this script needs much RAM (got a memory exception with 8gb)
+'''
+
 f = open('knn_result','w')
 sys.stdout = f
 
