@@ -14,7 +14,7 @@ f = open('knn_result','w')
 sys.stdout = f
 
 plotfigures = False
-iterations = [200, 200, 20000]
+iterations = [200, 2000] #, 20000]
 ks = [2,3,4,5, 6, 7, 8, 9, 10, 15, 20, 30, 50, 75, 100, 125, 150, 200, 500, 750, 1000] # > 150 doesn't work for iteration = 200
 
 result = {'acc':[], 'time':[]}
@@ -73,9 +73,9 @@ for a in range(len(result['acc'])):
 plt.xlabel('k')
 ax[0].set_title('acc')
 ax[1].set_title('time')
-ax[0].set_xticklabels(ks)
-ax[1].set_xticklabels(ks)
+plt.setp(ax, xticks=range(len(ks)), xticklabels=ks)
 legend = plt.legend()
 fig.savefig('knn.png')   # save the figure to file
+plt.show() #TODO remove
 plt.close(fig)
 

@@ -1,3 +1,4 @@
 For analysis you need some csv-files which are to large for git/mail.
 You can find them at http://norderdeich58.ddns.net/daten/uni/featurevectors/.
 Alternatively you can generate them with extractFeatures.py and extractFeaturesTest.py (rename files to resultTEST<iteration>.csv and resultTRAIN<iteration>.csv)
+Caution: Especially for resultTRAIN20000 the scripts needs much RAM (got a memory exception with 8gb). If you haven't enough RAM you have to remove the last value in iterations-lists.
