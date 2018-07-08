@@ -1,73 +1,48 @@
 # -*- coding: utf-8 -*-
-
-import csv
+import dataAdapter
 import matplotlib.pyplot as plt
-import numpy as np
-
-def readCSV():
-    ids = []
-    vectors = []
-    labels = []
-    with open('resultTRAIN.csv', 'rU') as data:
-        reader = csv.reader(data)
-        count = 0
-        for row in reader:
-            if count != 0:
-              ids.append(row[0])
-              s = row[1].replace('[','').replace(']','').split(', ')
-              tmp = [float(i) for i in s]
-              vectors.append(tmp)
-              labels.append(float(row[2]))
-            count = 42
-    return ids, vectors, labels
-
-# PLOTTING IMAGES -> TODO: Sind die sinnvoll?
-
-#plt.figure()
-#[plt.scatter(v, range(len(v)), s=1) for v in vectors]
-
-#plt.figure()
-#[plt.plot(v) for v in vectors]
-
-#plt.show()
-
-def readTestCSV():
-    test_ids = []
-    test_vectors = []
-    test_labels = []
-    with open('resultTEST.csv', 'rU') as data:
-        reader = csv.reader(data)
-        count = 0
-        for row in reader:
-            if count != 0:
-              test_ids.append(row[0])
-              s = row[1].replace('[','').replace(']','').split(', ')
-              tmp = [float(i) for i in s]
-              test_vectors.append(tmp)
-              test_labels.append(float(row[2]))
-            count = 42
-    return test_ids, test_vectors, test_labels
-
-
-ids, vectors, labels = readCSV()
-test_ids, test_vectors, test_labels = readTestCSV()
-
-# PREDICTION WITH KNN
+import time
 from sklearn.neighbors import KNeighborsClassifier
 
-k = 5
-model = KNeighborsClassifier(n_neighbors=k)
-model.fit(vectors, labels)
+plotfigures = False
+iterations = [200, 2000]#, 20000]
+ks = [2,3,4,5, 6, 7, 8, 9, 10, 15, 20, 30, 50, 75, 100, 125, 150, 200, 500, 750, 1000] # > 150 doesn't work for iteration = 200
 
-# TODO this needs to be test data with the correct shape...
-#tmp = labels[:23]
-#acc = model.score(test_vectors, tmp)
-acc = model.score(test_vectors, test_labels)
-print ('KNN Accuracy:', acc)
+for iteration in iterations:
+    #ids, vectors, labels = dataAdapter.readCSV('') # -> '' is default if filename is resultTRAIN.csv instead resultTRAIN<iteration>.csv
+    #test_ids, test_vectors, test_labels = dataAdapter.readTestCSV('')
 
-print (np.shape(vectors))
-print (np.shape(labels))
-print (np.shape(test_vectors))
-#print (np.shape(tmp))
-print (np.shape(test_labels))
+    ids, vectors, labels = dataAdapter.readCSV( iteration)
+    test_ids, test_vectors, test_labels = dataAdapter.readTestCSV(iteration)
+
+    # PLOTTING IMAGES -> TODO: Sind die sinnvoll?
+    if plotfigures:
+        plt.figure()
+        [plt.scatter(v, range(len(v)), s=1) for v in vectors]
+
+        plt.figure()
+        [plt.plot(v) for v in vectors]
+
+
+    # PREDICTION WITH KNN
+
+    for k in ks:
+        if iteration == 200 and k > 149:
+            break
+        start = time.time()
+        model = KNeighborsClassifier(n_neighbors=k)
+        model.fit(vectors, labels)
+
+        # TODO this needs to be test data with the correct shape...
+        #tmp = labels[:23]
+        #acc = model.score(test_vectors, tmp)
+        acc = model.score(test_vectors, test_labels)
+        end = time.time()
+        print ( 'Configuration: size = {}, k= {}'.format(iteration, k))
+        print ('KNN Accuracy:', acc)
+        print ('Time consumption: ', end - start)
+        print ( 30*'-')
+
+    if plotfigures:
+        plt.show()
 
